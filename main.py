@@ -31,7 +31,6 @@ generate_html = (
 """
 )
 
-# Wait for connect or fail
 max_wait = 10
 while max_wait > 0:
     if wlan.status() < 0 or wlan.status() >= 3:
@@ -39,8 +38,6 @@ while max_wait > 0:
     max_wait -= 1
     print("waiting for connection...")
     time.sleep(1)
-
-# Handle connection error
 if wlan.status() != 3:
     raise RuntimeError("network connection failed")
 else:
@@ -48,17 +45,14 @@ else:
     status = wlan.ifconfig()
     print("ip = " + status[0])
 
-# Open socket
 server_address = socket.getaddrinfo("0.0.0.0", 80)[0][-1]
 
 server_socket = socket.socket()
 server_socket.bind(server_address)
 server_socket.listen(1)
-
+client_socket = None
 print("listening on", server_address)
 
-client_socket = None
-# Listen for connections
 while True:
     try:
         client_socket, remote_address = server_socket.accept()
@@ -66,7 +60,6 @@ while True:
 
         pico.blink_led()
         current_temperature = pico.read_temperature()
-        print(f"{current_temperature}°C")
 
         client_file = client_socket.makefile("rwb", 0)
         while True:
