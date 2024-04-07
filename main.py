@@ -55,10 +55,14 @@ while True:
     try:
         client_socket, remote_address = server_socket.accept()
         print("client connected from", remote_address)
+
         pico.blink_led()
-        cl_file = client_socket.makefile("rwb", 0)
+        current_temperature = pico.read_temperature()
+        print(f"{current_temperature}°C")
+
+        client_file = client_socket.makefile("rwb", 0)
         while True:
-            line = cl_file.readline()
+            line = client_file.readline()
             if not line or line == b"\r\n":
                 break
         response = html
