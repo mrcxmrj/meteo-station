@@ -13,15 +13,23 @@ wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect(ssid, password)
 
-html = """
+generate_html = (
+    lambda pico_temperature: f"""
 <!DOCTYPE html>
 <html>
-<head> <title>Pico W</title> </head>
-<body> <h1>Pico W</h1>
-<p>Hello World</p>
+<head>
+    <meta charset="UTF-8">
+    <title>Pico W</title>
+</head>
+<body>
+    <h1>Pico W Dashboard</h1>
+    <section>
+       <b>Temperature (internal sensor):</b> {pico_temperature}°C
+    </section>
 </body>
 </html>
 """
+)
 
 # Wait for connect or fail
 max_wait = 10
@@ -65,8 +73,9 @@ while True:
             line = client_file.readline()
             if not line or line == b"\r\n":
                 break
-        response = html
-        client_socket.send("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
+
+        response = generate_html(current_temperature).encode("utf-8")
+        client_socket.send(b"HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
         client_socket.send(response)
         client_socket.close()
 
