@@ -17,10 +17,16 @@ else
 fi
 
 echo "Loading Wi-Fi config..."
- repl cp config.py :
+repl cp config.py :
 echo "Done"
+
+echo "Loading system controllers..."
+repl fs cp -r controllers/* :
+echo "Done"
+
 echo "-------------------"
 echo "Available commands:"
 echo "repl - to open micropython interactive prompt (read-eval-print loop)"
+echo "repl \$1 - to run mpremote commands on pico"
 echo "run \$1 - to run your scripts"
 alias run="repl run"

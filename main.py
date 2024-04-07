@@ -2,6 +2,7 @@ import time
 import network
 import socket
 from config import WIFI_SSID, WIFI_PASSWORD
+from controllers import pico
 
 ssid = WIFI_SSID
 password = WIFI_PASSWORD
@@ -51,6 +52,9 @@ while True:
     try:
         cl, addr = s.accept()
         print('client connected from', addr)
+        # FIXME: somehow we get two connections for every connection?
+        # or it's just that the function blinks twice idk
+        pico.pico_blink_led()
         cl_file = cl.makefile('rwb', 0)
         while True:
             line = cl_file.readline()
