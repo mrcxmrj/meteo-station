@@ -39,32 +39,31 @@ else:
     print( 'ip = ' + status[0] )
 
 # Open socket
-addr = socket.getaddrinfo('0.0.0.0', 80)[0][-1]
+server_address = socket.getaddrinfo('0.0.0.0', 80)[0][-1]
 
-s = socket.socket()
-s.bind(addr)
-s.listen(1)
+server_socket = socket.socket()
+server_socket.bind(server_address)
+server_socket.listen(1)
 
-print('listening on', addr)
+print('listening on', server_address)
 
+client_socket = None
 # Listen for connections
 while True:
     try:
-        cl, addr = s.accept()
-        print('client connected from', addr)
-        # FIXME: somehow we get two connections for every connection?
-        # or it's just that the function blinks twice idk
-        pico.pico_blink_led()
-        cl_file = cl.makefile('rwb', 0)
+        client_socket, remote_address = server_socket.accept()
+        print('client connected from', remote_address)
+        pico.blink_led()
+        cl_file = client_socket.makefile('rwb', 0)
         while True:
             line = cl_file.readline()
             if not line or line == b'\r\n':
                 break
         response = html
-        cl.send('HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n')
-        cl.send(response)
-        cl.close()
+        client_socket.send('HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n')
+        client_socket.send(response)
+        client_socket.close()
 
     except OSError as e:
-        cl.close()
+        if client_socket: client_socket.close()
         print('connection closed')
