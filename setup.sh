@@ -3,7 +3,7 @@
 source .venv/bin/activate
 alias repl="sudo mpremote connect port:/dev/ttyACM0"
 
-if [[ -e config.py ]]; then
+if [[ -e src/config.py ]]; then
     echo "Existing Wi-Fi config detected"
 else
     echo "No Wi-Fi config detected, enter credentials"
@@ -12,24 +12,12 @@ else
     echo -n "password: "
     read -s wifi_password
     echo; echo
-    touch config.py
-    echo "WIFI_SSID='$wifi_ssid'\nWIFI_PASSWORD='$wifi_password'" > config.py
+    touch src/config.py
+    echo "WIFI_SSID='$wifi_ssid'\nWIFI_PASSWORD='$wifi_password'" > src/config.py
 fi
 
-echo "Loading Wi-Fi config..."
-repl cp config.py :
-echo "Done"
-
-echo "Loading server..."
-repl cp server.py :
-echo "Done"
-
-echo "Loading system controllers..."
-repl fs cp -r controllers/* :
-echo "Done"
-
-echo "Loading views..."
-repl fs cp -r views/* :
+echo "Loading source files..."
+cd ./src && repl fs cp -r ./* : && cd ../
 echo "Done"
 
 echo "-------------------"

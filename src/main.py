@@ -1,10 +1,10 @@
 import asyncio
 
 from config import WIFI_PASSWORD, WIFI_SSID
-from controllers.dht11 import DHT11
-from controllers.pico import Pico
+from sensors.dht11 import DHT11
+from sensors.pico import Pico
 from server import Server
-from views.dashboard import DashboardView
+from templates.dashboard import DashboardView
 
 ssid = WIFI_SSID
 password = WIFI_PASSWORD

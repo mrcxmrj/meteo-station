@@ -3,9 +3,9 @@ import time
 
 import network
 
-from controllers.dht11 import DHT11
-from controllers.pico import Pico
-from views.dashboard import DashboardView
+from sensors.dht11 import DHT11
+from sensors.pico import Pico
+from templates.dashboard import DashboardView
 
 
 class Server:
