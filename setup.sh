@@ -24,6 +24,10 @@ echo "Loading system controllers..."
 repl fs cp -r controllers/* :
 echo "Done"
 
+echo "Loading views..."
+repl fs cp -r views/* :
+echo "Done"
+
 echo "-------------------"
 echo "Available commands:"
 echo "repl - to open micropython interactive prompt (read-eval-print loop)"

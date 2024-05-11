@@ -6,6 +6,7 @@ import network
 from config import WIFI_PASSWORD, WIFI_SSID
 from controllers.dht11 import DHT11
 from controllers.pico import Pico
+from views.dashboard import DashboardView
 
 ssid = WIFI_SSID
 password = WIFI_PASSWORD
@@ -14,24 +15,6 @@ wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect(ssid, password)
 
-generate_html = (
-    lambda pico_temperature, sensor_temperature: f"""
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Pico W</title>
-</head>
-<body>
-    <h1>Pico W Dashboard</h1>
-    <section>
-       <b>Temperature (internal sensor):</b> {pico_temperature}°C
-       <b>Temperature (DHT11):</b> {sensor_temperature}°C
-    </section>
-</body>
-</html>
-"""
-)
 
 max_wait = 10
 while max_wait > 0:
@@ -54,8 +37,11 @@ server_socket.bind(server_address)
 server_socket.listen(1)
 client_socket = None
 print("listening on", server_address)
-humidity_temperature_sensor = DHT11()
+
+humidity_temperature_sensor = DHT11(28)
 board = Pico()
+
+dashboard_view = DashboardView()
 
 while True:
     try:
@@ -65,6 +51,7 @@ while True:
         board.blink_led()
         pico_temperature = board.read_temperature()
         sensor_temperature = humidity_temperature_sensor.read_temperature()
+        sensor_humidity = humidity_temperature_sensor.read_humidity()
 
         client_file = client_socket.makefile("rwb", 0)
         while True:
@@ -72,7 +59,10 @@ while True:
             if not line or line == b"\r\n":
                 break
 
-        response = generate_html(pico_temperature, sensor_temperature).encode("utf-8")
+        response = dashboard_view.generate_template(
+            pico_temperature, sensor_temperature, sensor_humidity
+        ).encode("utf-8")
+
         client_socket.send(b"HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
         client_socket.send(response)
         client_socket.close()
