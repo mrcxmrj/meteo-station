@@ -51,6 +51,27 @@ class Server:
         self.server_socket.listen(1)
         print("listening on", server_address)
 
+    async def async_handle_connections(self, reader, writer) -> None:
+        print("Client connected")
+
+        while await reader.readline() != b"\r\n":
+            pass
+
+        self.board.blink_led()
+        pico_temperature = self.board.read_temperature()
+        sensor_temperature = self.humidity_temperature_sensor.read_temperature()
+        sensor_humidity = self.humidity_temperature_sensor.read_humidity()
+
+        response = self.dashboard_view.generate_template(
+            pico_temperature, sensor_temperature, sensor_humidity
+        )
+
+        writer.write("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
+        writer.write(response)
+        await writer.drain()
+        await writer.wait_closed()
+        print("Client Disconnected")
+
     def handle_connections(self) -> None:
         if not self.server_socket:
             print("server isn't listening")
