@@ -1,0 +1,4 @@
+importlib_metadata==7.1.0
+mpremote==1.22.0
+pyserial==3.5
+zipp==3.18.1
