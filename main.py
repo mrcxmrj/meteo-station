@@ -4,7 +4,8 @@ import time
 import network
 
 from config import WIFI_PASSWORD, WIFI_SSID
-from controllers import dht11, pico
+from controllers.dht11 import DHT11
+from controllers.pico import Pico
 
 ssid = WIFI_SSID
 password = WIFI_PASSWORD
@@ -53,15 +54,17 @@ server_socket.bind(server_address)
 server_socket.listen(1)
 client_socket = None
 print("listening on", server_address)
+humidity_temperature_sensor = DHT11()
+board = Pico()
 
 while True:
     try:
         client_socket, remote_address = server_socket.accept()
         print("client connected from", remote_address)
 
-        pico.blink_led()
-        pico_temperature = pico.read_temperature()
-        sensor_temperature = dht11.read_temperature()
+        board.blink_led()
+        pico_temperature = board.read_temperature()
+        sensor_temperature = humidity_temperature_sensor.read_temperature()
 
         client_file = client_socket.makefile("rwb", 0)
         while True:

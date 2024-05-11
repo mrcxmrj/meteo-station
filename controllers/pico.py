@@ -2,20 +2,24 @@ import time
 
 from machine import ADC, Pin
 
-led = Pin("LED", Pin.OUT)
-temperature_sensor = ADC(4)
 
-convert_adc_to_volt = lambda adc_value: (3.3 / 65535) * adc_value
-convert_volt_to_celcius = lambda volt_value: 27 - (volt_value - 0.706) / 0.001721
+class Pico:
+    def __init__(self) -> None:
+        self.led = Pin("LED", Pin.OUT)
+        self.temperature_sensor = ADC(4)
 
+    def convert_adc_to_volt(self, adc_value: float) -> float:
+        return (3.3 / 65535) * adc_value
 
-def blink_led():
-    led.value(1)
-    time.sleep(0.5)
-    led.value(0)
+    def convert_volt_to_celcius(self, volt_value: float) -> float:
+        return 27 - (volt_value - 0.706) / 0.001721
 
+    def blink_led(self) -> None:
+        self.led.value(1)
+        time.sleep(0.5)
+        self.led.value(0)
 
-def read_temperature():
-    volt_reading = convert_adc_to_volt(temperature_sensor.read_u16())
-    temperature = convert_volt_to_celcius(volt_reading)
-    return temperature
+    def read_temperature(self):
+        volt_reading = self.convert_adc_to_volt(self.temperature_sensor.read_u16())
+        temperature = self.convert_volt_to_celcius(volt_reading)
+        return temperature
