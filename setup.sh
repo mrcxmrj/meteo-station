@@ -20,6 +20,10 @@ echo "Loading Wi-Fi config..."
 repl cp config.py :
 echo "Done"
 
+echo "Loading server..."
+repl cp server.py :
+echo "Done"
+
 echo "Loading system controllers..."
 repl fs cp -r controllers/* :
 echo "Done"
