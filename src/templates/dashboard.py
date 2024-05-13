@@ -4,12 +4,14 @@ class DashboardView:
         board_temperature: float,
         sensor_temperature: float,
         sensor_humidity: float,
+        temperature_headers: list[str],
+        temperature_records: list[list[str]],
+        humidity_headers: list[str],
+        humidity_records: list[list[str]],
     ) -> str:
         board_temperature = round(board_temperature, 2)
         sensor_temperature = round(sensor_temperature, 2)
         sensor_humidity = round(sensor_humidity, 2)
-        headers = ["Board", "DHT11"]
-        records = [[str(board_temperature), str(sensor_temperature)] for _ in range(10)]
 
         return f"""
             <!DOCTYPE html>
@@ -33,12 +35,14 @@ class DashboardView:
                             <b>internal sensor:</b> {board_temperature}°C
                             <hr>
                             <h3>History</h3>
-                            {self.generate_table(headers, records)}
+                            {self.generate_table(temperature_headers, temperature_records)}
                         </article>
                         <article>
                             <h2>Humidity</h2>
                             <hr>
                             <b>DHT11:</b> {sensor_humidity}%
+                            <h3>History</h3>
+                            {self.generate_table(humidity_headers, humidity_records)}
                         </article>
                     </div>
                 </div>

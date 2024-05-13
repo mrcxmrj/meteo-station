@@ -60,8 +60,17 @@ class Server:
             self.reader.read_measurements()
         )
 
+        headers = ["Board", "DHT11"]
+        records = [[str(pico_temperature), str(sensor_temperature)] for _ in range(10)]
+
         response = self.dashboard_view.generate_template(
-            pico_temperature, sensor_temperature, sensor_humidity
+            pico_temperature,
+            sensor_temperature,
+            sensor_humidity,
+            headers,
+            records,
+            headers,
+            records,
         )
 
         writer.write("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
