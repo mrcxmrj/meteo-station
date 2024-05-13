@@ -47,8 +47,11 @@ class DashboardView:
         """
 
     def generate_table(self, headers: list[str], records: list[list[str]]) -> str:
-        headers_html: str = '<th scope="col"></th>' + "".join(
-            [f'<th scope="col">{header}</th>' for header in headers]
+        headers_html: str = (
+            "<tr>"
+            + '<th scope="col"></th>'
+            + "".join([f'<th scope="col">{header}</th>' for header in headers])
+            + "</tr>"
         )
         records_html: list[str] = [
             "".join([f"<td>{value}</td>" for value in record]) for record in records
@@ -61,22 +64,28 @@ class DashboardView:
             rows_html += row
             rows_html += "</tr>"
 
+        sums = [0.0 for _ in headers]
+        for record in records:
+            for i, value in enumerate(record):
+                sums[i] += float(value)
+        averages = [sum / len(records) for sum in sums]
+        footer_html: str = (
+            "<tr>"
+            + '<th scope="row">Average</th>'
+            + "".join([f"<td>{average}</td>" for average in averages])
+            + "</tr>"
+        )
+
         return f"""
             <table class="striped">
                 <thead>
-                    <tr>
-                        {headers_html}
-                    </tr>
+                    {headers_html}
                 </thead>
                 <tbody>
                     {rows_html}
                 </tbody>
                 <tfoot>
-                    <tr>
-                        <th scope="row">Average</th>
-                        <td>9,126</td>
-                        <td>0.91</td>
-                    </tr>
+                    {footer_html}
                 </tfoot>
             </table>
         """
