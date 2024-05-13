@@ -27,7 +27,13 @@ class Reader:
         try:
             with open(self.output_path, "r") as file:
                 lines = [line.rstrip().split(",") for line in list(file)]
-                return lines[-top:]
+                records = [
+                    [board_temperature, sensor_temperature, sensor_humidity]
+                    for board_temperature, sensor_temperature, sensor_humidity, *_ in lines[
+                        -top:
+                    ]
+                ]
+                return records
         except OSError:
             return []
 

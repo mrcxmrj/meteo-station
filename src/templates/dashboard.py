@@ -41,6 +41,7 @@ class DashboardView:
                             <h2>Humidity</h2>
                             <hr>
                             <b>DHT11:</b> {sensor_humidity}%
+                            <hr>
                             <h3>History</h3>
                             {self.generate_table(humidity_headers, humidity_records)}
                         </article>
