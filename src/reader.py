@@ -46,7 +46,7 @@ class Reader:
     async def read_loop(self, frequency) -> None:
         while True:
             measurements = self.read_measurements()
-            print(*measurements)
+            print("Measurements made: ", *measurements)
             self.read_saved_measurements(10)
             self.save_measurements(*measurements)
             await asyncio.sleep(frequency)

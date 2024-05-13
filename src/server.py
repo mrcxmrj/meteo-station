@@ -30,14 +30,14 @@ class Server:
             if wlan.status() < 0 or wlan.status() >= 3:
                 break
             max_wait -= 1
-            print("waiting for connection...")
+            print("Waiting for connection...")
             time.sleep(1)
         if wlan.status() != 3:
-            raise RuntimeError("network connection failed")
+            raise RuntimeError("Network connection failed")
         else:
-            print("connected")
+            print("Connected to network")
             status = wlan.ifconfig()
-            print("ip = " + status[0])
+            print("IP = " + status[0])
 
     async def async_handle_connections(self, reader, writer) -> None:
         print("Client connected")
