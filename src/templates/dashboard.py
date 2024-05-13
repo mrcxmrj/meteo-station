@@ -9,10 +9,6 @@ class DashboardView:
         humidity_headers: list[str],
         humidity_records: list[list[str]],
     ) -> str:
-        board_temperature = round(board_temperature, 2)
-        sensor_temperature = round(sensor_temperature, 2)
-        sensor_humidity = round(sensor_humidity, 2)
-
         return f"""
             <!DOCTYPE html>
             <html>
@@ -35,15 +31,16 @@ class DashboardView:
                             <b>internal sensor:</b> {board_temperature}°C
                             <hr>
                             <h3>History</h3>
-                            {self.generate_table(temperature_headers, temperature_records)}
+                            {self.generate_table(temperature_headers, temperature_records, "°C")}
                         </article>
                         <article>
                             <h2>Humidity</h2>
                             <hr>
                             <b>DHT11:</b> {sensor_humidity}%
+                            <br><br>
                             <hr>
                             <h3>History</h3>
-                            {self.generate_table(humidity_headers, humidity_records)}
+                            {self.generate_table(humidity_headers, humidity_records, "%")}
                         </article>
                     </div>
                 </div>
@@ -51,7 +48,9 @@ class DashboardView:
             </html>
         """
 
-    def generate_table(self, headers: list[str], records: list[list[str]]) -> str:
+    def generate_table(
+        self, headers: list[str], records: list[list[str]], unit: str
+    ) -> str:
         headers_html: str = (
             "<tr>"
             + '<th scope="col"></th>'
@@ -59,7 +58,8 @@ class DashboardView:
             + "</tr>"
         )
         records_html: list[str] = [
-            "".join([f"<td>{value}</td>" for value in record]) for record in records
+            "".join([f"<td>{value}{unit}</td>" for value in record])
+            for record in records
         ]
 
         rows_html = ""
@@ -73,11 +73,11 @@ class DashboardView:
         for record in records:
             for i, value in enumerate(record):
                 sums[i] += float(value)
-        averages = [sum / len(records) for sum in sums]
+        averages = [round(sum / len(records), 2) for sum in sums]
         footer_html: str = (
             "<tr>"
             + '<th scope="row">Average</th>'
-            + "".join([f"<td>{average}</td>" for average in averages])
+            + "".join([f"<td>{average}{unit}</td>" for average in averages])
             + "</tr>"
         )
 

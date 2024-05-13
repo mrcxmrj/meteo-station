@@ -14,9 +14,9 @@ class Reader:
         self.output_path = output_path
 
     def read_measurements(self) -> tuple[float, float, float]:
-        board_temperature = self.board.read_temperature()
-        temperature = self.humidity_temperature_sensor.read_temperature()
-        humidity = self.humidity_temperature_sensor.read_humidity()
+        board_temperature = round(self.board.read_temperature(), 2)
+        temperature = round(self.humidity_temperature_sensor.read_temperature(), 2)
+        humidity = round(self.humidity_temperature_sensor.read_humidity(), 2)
         return board_temperature, temperature, humidity
 
     def save_measurements(self, board_temperature, temperature, humidity) -> None:
