@@ -10,14 +10,13 @@ from templates.dashboard import DashboardView
 ssid = WIFI_SSID
 password = WIFI_PASSWORD
 
-server = Server(
-    board=Pico(), humidity_temperature_sensor=DHT11(28), dashboard_view=DashboardView()
-)
-server.connect(ssid, password)
 reader = Reader(
     board=Pico(), humidity_temperature_sensor=DHT11(28), output_path="output.txt"
 )
 reader.clear_measurements()
+
+server = Server(reader=reader, dashboard_view=DashboardView())
+server.connect(ssid, password)
 
 
 async def main():

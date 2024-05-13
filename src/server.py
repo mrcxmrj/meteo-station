@@ -3,6 +3,7 @@ import time
 
 import network
 
+from reader import Reader
 from sensors.dht11 import DHT11
 from sensors.pico import Pico
 from templates.dashboard import DashboardView
@@ -11,13 +12,11 @@ from templates.dashboard import DashboardView
 class Server:
     def __init__(
         self,
-        board: Pico,
-        humidity_temperature_sensor: DHT11,
+        reader: Reader,
         dashboard_view: DashboardView,
     ) -> None:
         self.server_socket = None
-        self.board = board
-        self.humidity_temperature_sensor = humidity_temperature_sensor
+        self.reader = reader
         self.dashboard_view = dashboard_view
 
     def connect(
@@ -57,10 +56,9 @@ class Server:
         while await reader.readline() != b"\r\n":
             pass
 
-        self.board.blink_led()
-        pico_temperature = self.board.read_temperature()
-        sensor_temperature = self.humidity_temperature_sensor.read_temperature()
-        sensor_humidity = self.humidity_temperature_sensor.read_humidity()
+        pico_temperature, sensor_temperature, sensor_humidity, *_ = (
+            self.reader.read_measurements()
+        )
 
         response = self.dashboard_view.generate_template(
             pico_temperature, sensor_temperature, sensor_humidity
@@ -82,10 +80,13 @@ class Server:
                 client_socket, remote_address = self.server_socket.accept()
                 print("client connected from", remote_address)
 
-                self.board.blink_led()
-                pico_temperature = self.board.read_temperature()
-                sensor_temperature = self.humidity_temperature_sensor.read_temperature()
-                sensor_humidity = self.humidity_temperature_sensor.read_humidity()
+                pico_temperature, sensor_temperature, sensor_humidity, *_ = (
+                    self.reader.read_measurements()
+                )
+
+                response = self.dashboard_view.generate_template(
+                    pico_temperature, sensor_temperature, sensor_humidity
+                )
 
                 client_file = client_socket.makefile("rwb", 0)
                 while True:
