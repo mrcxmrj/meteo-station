@@ -1,6 +1,7 @@
 import asyncio
 
 from config import WIFI_PASSWORD, WIFI_SSID
+from reader import Reader
 from sensors.dht11 import DHT11
 from sensors.pico import Pico
 from server import Server
@@ -13,15 +14,17 @@ server = Server(
     board=Pico(), humidity_temperature_sensor=DHT11(28), dashboard_view=DashboardView()
 )
 server.connect(ssid, password)
-# server.listen("0.0.0.0", 80)
+reader = Reader(
+    board=Pico(), humidity_temperature_sensor=DHT11(28), output_path="output.txt"
+)
+reader.clear_measurements()
 
 
 async def main():
     async_server = asyncio.start_server(server.async_handle_connections, "0.0.0.0", 80)
+    read_loop = reader.read_loop(3)
     asyncio.create_task(async_server)
-    while True:
-        await asyncio.sleep(5)
-        print("This message will be printed every 5 seconds")
+    asyncio.create_task(read_loop)
 
 
 loop = asyncio.get_event_loop()
