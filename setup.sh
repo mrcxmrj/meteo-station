@@ -25,4 +25,7 @@ echo "Available commands:"
 echo "repl - to open micropython interactive prompt (read-eval-print loop)"
 echo "repl \$1 - to run mpremote commands on pico"
 echo "run \$1 - to run your scripts"
+echo "nukefs - to clear filesystem"
+
 alias run="repl run"
+alias nukefs="repl exec --no-follow \"import os, machine, rp2; os.umount('/'); bdev = rp2.Flash(); os.VfsLfs2.mkfs(bdev, progsize=256); vfs = os.VfsLfs2(bdev, progsize=256); os.mount(vfs, '/'); machine.reset()\""
