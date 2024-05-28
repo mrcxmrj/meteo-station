@@ -1,12 +1,13 @@
 class Router:
-    # routes: dict[str, Callable]
-    def __init__(self, routes) -> None:
-        self.routes = routes
+    def __init__(self) -> None:
         pass
 
     def route(self, method: str, route: str):
-        key = method + route
-        try:
-            self.routes[key]()
-        except KeyError:
-            print("Routing error: no route matched")
+        if route == "/":
+            if method == "GET":
+                print("GET /")
+        elif route == "/clear-db":
+            if method == "POST":
+                print("POST /clear-db")
+        else:
+            print("no route matched")
