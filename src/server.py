@@ -3,6 +3,7 @@ import time
 import network
 
 from reader import Reader
+from router import Router
 from templates.dashboard import DashboardView
 
 
@@ -10,10 +11,12 @@ class Server:
     def __init__(
         self,
         reader: Reader,
+        router: Router,
         dashboard_view: DashboardView,
     ) -> None:
         self.server_socket = None
         self.reader = reader
+        self.router = router
         self.dashboard_view = dashboard_view
 
     def connect(
@@ -42,6 +45,10 @@ class Server:
     async def async_handle_connections(self, reader, writer) -> None:
         print("Client connected")
 
+        request_line = await reader.readline()
+        method, route, *_ = request_line.decode("utf-8").split()
+        self.router.route(method, route)
+        # skip request headers
         while await reader.readline() != b"\r\n":
             pass
 
