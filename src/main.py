@@ -3,6 +3,7 @@ import asyncio
 from config import WIFI_PASSWORD, WIFI_SSID
 from reader import Reader
 from router import Router
+from routes import routes
 from sensors.dht11 import DHT11
 from sensors.pico import Pico
 from server import Server
@@ -16,7 +17,6 @@ reader = Reader(
 )
 reader.clear_measurements()
 
-routes = {"GET/": lambda: print("get /"), "GET/test": lambda: print("get /test")}
 router = Router(routes)
 
 server = Server(reader=reader, router=router, dashboard_view=DashboardView())
