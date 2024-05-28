@@ -2,22 +2,16 @@ import time
 
 import network
 
-from reader import Reader
 from router import Router
-from templates.dashboard import DashboardView
 
 
 class Server:
     def __init__(
         self,
-        reader: Reader,
         router: Router,
-        dashboard_view: DashboardView,
     ) -> None:
         self.server_socket = None
-        self.reader = reader
         self.router = router
-        self.dashboard_view = dashboard_view
 
     def connect(
         self,
@@ -47,39 +41,16 @@ class Server:
 
         request_line = await reader.readline()
         method, route, *_ = request_line.decode("utf-8").split()
-        self.router.route(method, route)
+        response_body = self.router.route(method, route)
 
         # skip request headers
         while await reader.readline() != b"\r\n":
             pass
 
-        pico_temperature, sensor_temperature, sensor_humidity, *_ = (
-            self.reader.read_measurements()
-        )
-
-        temperature_headers = ["internal", "DHT11"]
-        humidity_headers = ["DHT11"]
-
-        temperature_records = []
-        humidity_records = []
-
-        records = self.reader.read_saved_measurements(top=5)
-        for record in records:
-            temperature_records.append(record[:2])
-            humidity_records.append(record[-1:])
-
-        response = self.dashboard_view.generate_template(
-            board_temperature=pico_temperature,
-            sensor_temperature=sensor_temperature,
-            sensor_humidity=sensor_humidity,
-            temperature_headers=temperature_headers,
-            temperature_records=temperature_records,
-            humidity_headers=humidity_headers,
-            humidity_records=humidity_records,
-        )
-
         writer.write("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
-        writer.write(response)
+        if response_body:
+            writer.write(response_body)
+
         await writer.drain()
         await writer.wait_closed()
         print("Client Disconnected")

@@ -16,9 +16,9 @@ reader = Reader(
 )
 reader.clear_measurements()
 
-router = Router()
+router = Router(reader=reader, dashboard_view=DashboardView())
 
-server = Server(reader=reader, router=router, dashboard_view=DashboardView())
+server = Server(router=router)
 server.connect(ssid, password)
 
 
