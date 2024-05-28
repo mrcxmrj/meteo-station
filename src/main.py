@@ -16,7 +16,8 @@ reader = Reader(
 )
 reader.clear_measurements()
 
-router = Router()
+routes = {"GET/": lambda: print("get /"), "GET/test": lambda: print("get /test")}
+router = Router(routes)
 
 server = Server(reader=reader, router=router, dashboard_view=DashboardView())
 server.connect(ssid, password)

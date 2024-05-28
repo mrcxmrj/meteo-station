@@ -48,6 +48,7 @@ class Server:
         request_line = await reader.readline()
         method, route, *_ = request_line.decode("utf-8").split()
         self.router.route(method, route)
+
         # skip request headers
         while await reader.readline() != b"\r\n":
             pass
