@@ -6,7 +6,6 @@ from router import Router
 from sensors.dht11 import DHT11
 from sensors.pico import Pico
 from server import Server
-from templates.dashboard import DashboardView
 
 ssid = WIFI_SSID
 password = WIFI_PASSWORD
@@ -16,7 +15,7 @@ reader = Reader(
 )
 reader.clear_measurements()
 
-router = Router(reader=reader, dashboard_view=DashboardView())
+router = Router(reader=reader)
 
 server = Server(router=router)
 server.connect(ssid, password)
