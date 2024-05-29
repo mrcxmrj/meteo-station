@@ -1,6 +1,13 @@
+from client.components.table import Table
+
+
 class App:
+    def __init__(self) -> None:
+        self.rendered_components = {}
+
     def generate_template(
         self,
+        page: str,
         board_temperature: float,
         sensor_temperature: float,
         sensor_humidity: float,
@@ -9,6 +16,14 @@ class App:
         humidity_headers: list[str],
         humidity_records: list[list[str]],
     ) -> str:
+        if page == "table":
+            self.rendered_components = {
+                "temperature_table": Table(
+                    temperature_headers, temperature_records, "°C"
+                ),
+                "humidity_table": Table(humidity_headers, humidity_records, "%"),
+            }
+
         return f"""
             <!DOCTYPE html>
             <html>
@@ -41,7 +56,7 @@ class App:
                             <b>internal sensor:</b> {board_temperature}°C
                             <hr>
                             <h3>History</h3>
-                            {self.generate_table(temperature_headers, temperature_records, "°C")}
+                            {self.rendered_components["temperature_table"].generate_template()}
                         </article>
                         <article>
                             <h2>Humidity</h2>
@@ -50,59 +65,12 @@ class App:
                             <br><br>
                             <hr>
                             <h3>History</h3>
-                            {self.generate_table(humidity_headers, humidity_records, "%")}
+                            {self.rendered_components["humidity_table"].generate_template()}
                         </article>
                     </div>
                 </div>
             </body>
             </html>
-        """
-
-    def generate_table(
-        self, headers: list[str], records: list[list[str]], unit: str
-    ) -> str:
-        headers_html: str = (
-            "<tr>"
-            + '<th scope="col"></th>'
-            + "".join([f'<th scope="col">{header}</th>' for header in headers])
-            + "</tr>"
-        )
-        records_html: list[str] = [
-            "".join([f"<td>{value}{unit}</td>" for value in record])
-            for record in records
-        ]
-
-        rows_html = ""
-        for index, row in enumerate(records_html):
-            rows_html += "<tr>"
-            rows_html += f'<th scope="row">{index}</th>'
-            rows_html += row
-            rows_html += "</tr>"
-
-        sums = [0.0 for _ in headers]
-        for record in records:
-            for i, value in enumerate(record):
-                sums[i] += float(value)
-        averages = [round(sum / len(records), 2) for sum in sums]
-        footer_html: str = (
-            "<tr>"
-            + '<th scope="row">Average</th>'
-            + "".join([f"<td>{average}{unit}</td>" for average in averages])
-            + "</tr>"
-        )
-
-        return f"""
-            <table class="striped">
-                <thead>
-                    {headers_html}
-                </thead>
-                <tbody>
-                    {rows_html}
-                </tbody>
-                <tfoot>
-                    {footer_html}
-                </tfoot>
-            </table>
         """
 
     def generate_options_template(self):

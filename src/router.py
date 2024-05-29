@@ -39,6 +39,7 @@ class Router:
             humidity_records.append(record[-1:])
 
         return self.app.generate_template(
+            page="table",
             board_temperature=pico_temperature,
             sensor_temperature=sensor_temperature,
             sensor_humidity=sensor_humidity,
