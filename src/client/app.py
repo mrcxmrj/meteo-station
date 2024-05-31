@@ -1,29 +1,56 @@
 from client.components.table import Table
+from reader import Reader
 
 
 class App:
-    def __init__(self) -> None:
+    def __init__(self, reader: Reader) -> None:
         self.rendered_components = {}
+        self.measurements = {}
+        self.reader = reader
+        self.reader.clear_measurements()
 
-    def generate_template(
-        self,
-        page: str,
-        board_temperature: float,
-        sensor_temperature: float,
-        sensor_humidity: float,
-        temperature_headers: list[str],
-        temperature_records: list[list[str]],
-        humidity_headers: list[str],
-        humidity_records: list[list[str]],
-    ) -> str:
+    def get_measurements(self) -> None:
+        board_temperature, sensor_temperature, sensor_humidity, *_ = (
+            self.reader.read_measurements()
+        )
+
+        temperature_headers = ["internal", "DHT11"]
+        humidity_headers = ["DHT11"]
+
+        temperature_records = []
+        humidity_records = []
+
+        records = self.reader.read_saved_measurements(top=5)
+        for record in records:
+            temperature_records.append(record[:2])
+            humidity_records.append(record[-1:])
+
+        self.measurements["board_temperature"] = board_temperature
+        self.measurements["sensor_temperature"] = sensor_temperature
+        self.measurements["sensor_humidity"] = sensor_humidity
+        self.measurements["temperature_headers"] = temperature_headers
+        self.measurements["temperature_records"] = temperature_records
+        self.measurements["humidity_headers"] = humidity_headers
+        self.measurements["humidity_records"] = humidity_records
+
+    def set_page(self, page: str) -> None:
         if page == "table":
             self.rendered_components = {
                 "temperature_table": Table(
-                    temperature_headers, temperature_records, "°C"
+                    self.measurements["temperature_headers"],
+                    self.measurements["temperature_records"],
+                    "°C",
                 ),
-                "humidity_table": Table(humidity_headers, humidity_records, "%"),
+                "humidity_table": Table(
+                    self.measurements["humidity_headers"],
+                    self.measurements["humidity_records"],
+                    "%",
+                ),
             }
 
+    def render(self, page: str) -> str:
+        self.get_measurements()
+        self.set_page(page)
         return f"""
             <!DOCTYPE html>
             <html>
@@ -51,9 +78,9 @@ class App:
                         <article>
                             <h2>Temperature</h2>
                             <hr>
-                            <b>DHT11:</b> {sensor_temperature}°C
+                            <b>DHT11:</b> {self.measurements["sensor_temperature"]}°C
                             <br>
-                            <b>internal sensor:</b> {board_temperature}°C
+                            <b>internal sensor:</b> {self.measurements["board_temperature"]}°C
                             <hr>
                             <h3>History</h3>
                             {self.rendered_components["temperature_table"].generate_template()}
@@ -61,7 +88,7 @@ class App:
                         <article>
                             <h2>Humidity</h2>
                             <hr>
-                            <b>DHT11:</b> {sensor_humidity}%
+                            <b>DHT11:</b> {self.measurements["sensor_humidity"]}%
                             <br><br>
                             <hr>
                             <h3>History</h3>

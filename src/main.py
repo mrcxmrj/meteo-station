@@ -1,5 +1,6 @@
 import asyncio
 
+from client.app import App
 from config import WIFI_PASSWORD, WIFI_SSID
 from reader import Reader
 from router import Router
@@ -15,7 +16,9 @@ reader = Reader(
 )
 reader.clear_measurements()
 
-router = Router(reader=reader)
+app_ui = App(reader=reader)
+
+router = Router(app_ui=app_ui)
 
 server = Server(router=router)
 server.connect(ssid, password)
