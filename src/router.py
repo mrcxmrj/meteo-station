@@ -1,5 +1,4 @@
 from client.app import App
-from reader import Reader
 
 
 class Router:
