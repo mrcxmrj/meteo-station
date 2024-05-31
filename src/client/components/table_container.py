@@ -58,6 +58,7 @@ class TableContainer:
                     <br><br>
                     <hr>
                     <h3>History</h3>
+                    <hr>
                     {self.humidity_table.render()}
                 </article>
             </div>
