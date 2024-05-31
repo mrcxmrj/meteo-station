@@ -6,6 +6,7 @@ from reader import Reader
 class App:
     def __init__(self, reader: Reader) -> None:
         self.reader = reader
+        self.page: TableContainer | Options | None = None
 
     def set_page(self, page: str) -> None:
         if page == "table":
@@ -32,13 +33,13 @@ class App:
                     <li><strong>Acme Corp</strong></li>
                   </ul>
                   <ul>
-                    <li><a href="#" class="contrast">Table</a></li>
+                    <li><a href="/table" class="contrast">Table</a></li>
                     <li><a href="/chart" class="contrast">Chart</a></li>
                     <li><a href="/options" class="contrast">Options</a></li>
                   </ul>
                 </nav>
                 <div class="container">
-                    {self.page.render()}
+                    { self.page.render()if self.page is not None else ""}
                 </div>
                 <script src="js/script.js" ></script>
             </body>

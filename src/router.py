@@ -3,17 +3,22 @@ from client.app import App
 
 class Router:
     def __init__(self, app_ui: App) -> None:
-        self.server_socket = None
         self.app_ui = app_ui
 
     def route(self, method: str, route: str) -> tuple[int, str, str, str]:
         print(f"Routing: {method}{route}")
         if route == "/":
             if method == "GET":
-                return self.handle_get(self.app_ui.render("table"))
+                return self.handle_get(self.app_ui.render(page="index"))
+        if route == "/table":
+            if method == "GET":
+                return self.handle_get(self.app_ui.render(page="table"))
+        if route == "/chart":
+            if method == "GET":
+                return self.handle_get(self.app_ui.render(page="chart"))
         if route == "/options":
             if method == "GET":
-                return self.handle_get(self.app_ui.render("options"))
+                return self.handle_get(self.app_ui.render(page="options"))
         elif route == "/clear-db":
             if method == "POST":
                 print("POST /clear-db")
