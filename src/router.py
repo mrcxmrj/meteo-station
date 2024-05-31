@@ -21,7 +21,6 @@ class Router:
                 return self.handle_get(self.app_ui.render(page="options"))
         elif route == "/clear-db":
             if method == "POST":
-                print("POST /clear-db")
                 return self.handle_post(
                     "Database cleared successfully", "Error clearing database"
                 )
