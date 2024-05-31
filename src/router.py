@@ -6,22 +6,54 @@ class Router:
         self.server_socket = None
         self.app_ui = app_ui
 
-    def route(self, method: str, route: str):
+    def route(self, method: str, route: str) -> tuple[int, str, str, str]:
         print(f"Routing: {method}{route}")
         if route == "/":
             if method == "GET":
-                return self.get_index()
+                return self.handle_get(self.app_ui.render("table"))
         if route == "/options":
             if method == "GET":
-                return self.get_options()
+                return self.handle_get(self.app_ui.render("options"))
         elif route == "/clear-db":
             if method == "POST":
                 print("POST /clear-db")
-        else:
-            print("Routing error: no route matched")
+                return self.handle_post(
+                    "Database cleared successfully", "Error clearing database"
+                )
 
-    def get_index(self):
-        return self.app_ui.render("table")
+        print("Routing error: no route matched")
+        return (
+            404,
+            "Not Found",
+            "text/html",
+            "<p>404: Not Found</p>",
+        )
 
-    def get_options(self):
-        return self.app_ui.generate_options_template()
+    def handle_get(self, body: str) -> tuple[int, str, str, str]:
+        try:
+            return 200, "OK", "text/html", body
+        except:
+            return (
+                500,
+                "Internal Server Error",
+                "text/html",
+                "<p>Internal Server Error: Something went wrong :/</p>",
+            )
+
+    def handle_post(
+        self, message: str, error_message: str
+    ) -> tuple[int, str, str, str]:
+        try:
+            return (
+                200,
+                "OK",
+                "text/html",
+                f'{{"message": {message}}}',
+            )
+        except:
+            return (
+                500,
+                "Internal Server Error",
+                "text/html",
+                f'{{"message": {error_message}}}',
+            )

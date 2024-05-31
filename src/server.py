@@ -41,15 +41,19 @@ class Server:
 
         request_line = await reader.readline()
         method, route, *_ = request_line.decode("utf-8").split()
-        response_body = self.router.route(method, route)
+        status_code, reason_phrase, content_type, body = self.router.route(
+            method, route
+        )
 
         # skip request headers
         while await reader.readline() != b"\r\n":
             pass
 
-        writer.write("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
-        if response_body:
-            writer.write(response_body)
+        writer.write(
+            f"HTTP/1.0 {status_code} {reason_phrase}\r\nContent-type: {content_type}\r\n\r\n"
+        )
+        if body:
+            writer.write(body)
 
         await writer.drain()
         await writer.wait_closed()

@@ -1,20 +1,17 @@
 from client.components.options import Options
-from client.components.table import Table
 from client.components.table_container import TableContainer
 from reader import Reader
 
 
 class App:
     def __init__(self, reader: Reader) -> None:
-        self.rendered_components = {}
         self.reader = reader
-        self.reader.clear_measurements()
 
     def set_page(self, page: str) -> None:
         if page == "table":
-            self.rendered_components = {"table_container": TableContainer(self.reader)}
+            self.page = TableContainer(self.reader)
         elif page == "options":
-            self.rendered_components = {"options": Options()}
+            self.page = Options()
 
     def render(self, page: str) -> str:
         self.set_page(page)
@@ -41,8 +38,9 @@ class App:
                   </ul>
                 </nav>
                 <div class="container">
-                    {self.rendered_components["table_container"].render()}
+                    {self.page.render()}
                 </div>
+                <script src="js/script.js" ></script>
             </body>
             </html>
         """
