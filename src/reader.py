@@ -27,7 +27,7 @@ class Reader:
         try:
             with open(self.output_path, "r") as file:
                 lines = [line.rstrip().split(",") for line in list(file)]
-                # I think this is a bad idea for long list of records
+                # FIXME: I think this is a bad idea for long list of records
                 records = [
                     [board_temperature, sensor_temperature, sensor_humidity]
                     for board_temperature, sensor_temperature, sensor_humidity, *_ in lines[

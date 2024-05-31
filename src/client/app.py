@@ -13,6 +13,8 @@ class App:
             self.page = TableContainer(self.reader)
         elif page == "options":
             self.page = Options()
+        else:
+            self.page = None
 
     def render(self, page: str) -> str:
         self.set_page(page)
