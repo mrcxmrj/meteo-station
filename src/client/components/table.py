@@ -4,7 +4,7 @@ class Table:
         self.records = records
         self.unit = unit
 
-    def generate_template(self) -> str:
+    def render(self) -> str:
         headers_html: str = (
             "<tr>"
             + '<th scope="col"></th>'
