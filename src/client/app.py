@@ -1,5 +1,6 @@
 from client.components.options import Options
 from client.components.table import Table
+from client.components.table_container import TableContainer
 from reader import Reader
 
 
@@ -9,37 +10,9 @@ class App:
         self.reader = reader
         self.reader.clear_measurements()
 
-    def create_data_tables(self) -> tuple[Table, Table]:
-        temperature_headers = ["internal", "DHT11"]
-        humidity_headers = ["DHT11"]
-
-        temperature_records = []
-        humidity_records = []
-
-        records = self.reader.read_saved_measurements(top=5)
-        for record in records:
-            temperature_records.append(record[:2])
-            humidity_records.append(record[-1:])
-
-        temperature_table = Table(
-            temperature_headers,
-            temperature_records,
-            "°C",
-        )
-        humidity_table = Table(
-            humidity_headers,
-            humidity_records,
-            "%",
-        )
-        return temperature_table, humidity_table
-
     def set_page(self, page: str) -> None:
         if page == "table":
-            temperature_table, humidity_table = self.create_data_tables()
-            self.rendered_components = {
-                "temperature_table": temperature_table,
-                "humidity_table": humidity_table,
-            }
+            self.rendered_components = {"table_container": TableContainer(self.reader)}
         elif page == "options":
             self.rendered_components = {"options": Options()}
 
@@ -68,18 +41,7 @@ class App:
                   </ul>
                 </nav>
                 <div class="container">
-                    <div class="grid">
-                        <article>
-                            <h2>Temperature</h2>
-                            <hr>
-                            {self.rendered_components["temperature_table"].render()}
-                        </article>
-                        <article>
-                            <h2>Humidity</h2>
-                            <hr>
-                            {self.rendered_components["humidity_table"].render()}
-                        </article>
-                    </div>
+                    {self.rendered_components["table_container"].render()}
                 </div>
             </body>
             </html>
