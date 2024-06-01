@@ -1,6 +1,5 @@
 import asyncio
 
-from client.app import App
 from config import WIFI_PASSWORD, WIFI_SSID
 from reader import Reader
 from router import Router
@@ -8,6 +7,7 @@ from sensors.bmp280 import BMP280
 from sensors.dht11 import DHT11
 from sensors.pico import Pico
 from server import Server
+from ui_manager import UIManager
 
 ssid = WIFI_SSID
 password = WIFI_PASSWORD
@@ -20,9 +20,9 @@ reader = Reader(
 )
 reader.clear_measurements()
 
-app_ui = App(reader=reader)
+ui_manager = UIManager(reader=reader)
 
-router = Router(app_ui=app_ui)
+router = Router(ui_manager=ui_manager)
 
 server = Server(router=router)
 server.connect(ssid, password)

@@ -1,42 +1,15 @@
-from client.components.table import Table
-from reader import Reader
-
-
 class TableContainer:
     def __init__(
         self,
-        reader: Reader,
+        current_measurements: tuple[float, float, float, float, float],
+        temperature_table_template: str,
+        humidity_table_template: str,
+        pressure_table_template: str,
     ) -> None:
-        self.reader = reader
-        self.temperature_table, self.humidity_table, self.pressure_table = (
-            self.create_data_tables()
-        )
-
-    def create_data_tables(self) -> tuple[Table, Table, Table]:
-        temperature_headers = ["internal", "DHT11", "BMP280"]
-        humidity_headers = ["DHT11"]
-        pressure_headers = ["BMP280"]
-
-        temperature_records, humidity_records, pressure_records = (
-            self.reader.read_saved_measurements_by_category(top=5)
-        )
-
-        temperature_table = Table(
-            temperature_headers,
-            temperature_records,
-            "°C",
-        )
-        humidity_table = Table(
-            humidity_headers,
-            humidity_records,
-            "%",
-        )
-        pressure_table = Table(
-            pressure_headers,
-            pressure_records,
-            "hPa",
-        )
-        return temperature_table, humidity_table, pressure_table
+        self.current_measurements = current_measurements
+        self.temperature_table_template = temperature_table_template
+        self.humidity_table_template = humidity_table_template
+        self.pressure_table_template = pressure_table_template
 
     def render(self) -> str:
         (
@@ -45,7 +18,7 @@ class TableContainer:
             current_dht_temperature,
             current_bmp_pressure,
             current_bmp_temperature,
-        ) = self.reader.read_measurements()
+        ) = self.current_measurements
         return f"""
             <div class="grid">
                 <article>
@@ -58,7 +31,7 @@ class TableContainer:
                     <b>BMP280:</b> {current_bmp_temperature}°C
                     <hr>
                     <h3>History</h3>
-                    {self.temperature_table.render()}
+                    {self.temperature_table_template}
                 </article>
                 <article>
                     <h2>Humidity</h2>
@@ -67,7 +40,7 @@ class TableContainer:
                     <br><br><br>
                     <hr>
                     <h3>History</h3>
-                    {self.humidity_table.render()}
+                    {self.humidity_table_template}
                 </article>
                 <article>
                     <h2>Pressure</h2>
@@ -76,7 +49,7 @@ class TableContainer:
                     <br><br><br>
                     <hr>
                     <h3>History</h3>
-                    {self.pressure_table.render()}
+                    {self.pressure_table_template}
                 </article>
             </div>
         """

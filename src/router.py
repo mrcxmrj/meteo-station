@@ -1,20 +1,20 @@
-from client.app import App
+from ui_manager import UIManager
 
 
 class Router:
-    def __init__(self, app_ui: App) -> None:
-        self.app_ui = app_ui
+    def __init__(self, ui_manager: UIManager) -> None:
+        self.ui_manager = ui_manager
 
     def route(self, method: str, route: str) -> tuple[int, str, str, str]:
         print(f"Routing: {method}{route}")
         if route == "/" and method == "GET":
-            return self.handle_get(self.app_ui.render(page="index"))
+            return self.handle_get(self.ui_manager.get_app_template(page="index"))
         if route == "/table" and method == "GET":
-            return self.handle_get(self.app_ui.render(page="table"))
+            return self.handle_get(self.ui_manager.get_app_template(page="table"))
         if route == "/chart" and method == "GET":
-            return self.handle_get(self.app_ui.render(page="chart"))
+            return self.handle_get(self.ui_manager.get_app_template(page="chart"))
         if route == "/options" and method == "GET":
-            return self.handle_get(self.app_ui.render(page="options"))
+            return self.handle_get(self.ui_manager.get_app_template(page="options"))
 
         if route == "/clear-db" and method == "POST":
             return self.handle_post(

@@ -1,23 +1,8 @@
-from client.components.options import Options
-from client.components.table_container import TableContainer
-from reader import Reader
-
-
 class App:
-    def __init__(self, reader: Reader) -> None:
-        self.reader = reader
-        self.page: TableContainer | Options | None = None
+    def __init__(self, page_template: str) -> None:
+        self.page_template = page_template
 
-    def set_page(self, page: str) -> None:
-        if page == "table":
-            self.page = TableContainer(self.reader)
-        elif page == "options":
-            self.page = Options()
-        else:
-            self.page = None
-
-    def render(self, page: str) -> str:
-        self.set_page(page)
+    def render(self) -> str:
         return f"""
             <!DOCTYPE html>
             <html>
@@ -40,7 +25,7 @@ class App:
                     </nav>
                 </header>
                 <div class="container">
-                    { self.page.render()if self.page is not None else ""}
+                    {self.page_template}
                 </div>
                 <script src="js/script.js" ></script>
             </body>

@@ -45,9 +45,13 @@ class Server:
             method, route
         )
 
-        # skip request headers
-        while await reader.readline() != b"\r\n":
-            pass
+        while True:
+            line = await reader.readline()
+            if "x-refresh: true" in line:
+                print("partial")
+            print(line)
+            if line == b"\r\n":
+                break
 
         writer.write(
             f"HTTP/1.0 {status_code} {reason_phrase}\r\nContent-type: {content_type}\r\n\r\n"
