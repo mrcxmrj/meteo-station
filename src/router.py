@@ -15,12 +15,21 @@ class Router:
             return self.handle_get(self.app_ui.render(page="chart"))
         if route == "/options" and method == "GET":
             return self.handle_get(self.app_ui.render(page="options"))
+
         if route == "/clear-db" and method == "POST":
             return self.handle_post(
                 "Database cleared successfully", "Error clearing database"
             )
 
-        print("Routing error: no route matched")
+        if route == "/js/script.js" and method == "GET":
+            try:
+                with open("client/js/script.js", "r") as f:
+                    body = f.read()
+                    return self.handle_get(body, type="js")
+            except:
+                print("Script not found")
+
+        print("Routing error: no route matched or resource not found")
         return (
             404,
             "Not Found",
@@ -28,9 +37,9 @@ class Router:
             "<p>404: Not Found</p>",
         )
 
-    def handle_get(self, body: str) -> tuple[int, str, str, str]:
+    def handle_get(self, body: str, type: str = "html") -> tuple[int, str, str, str]:
         try:
-            return 200, "OK", "text/html", body
+            return 200, "OK", f"text/{type}", body
         except:
             return (
                 500,
