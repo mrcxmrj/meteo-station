@@ -19,16 +19,39 @@ class Reader:
         self.pressure_temperature_sensor = pressure_temperature_sensor
         self.output_path = output_path
 
-    def read_measurements(self) -> tuple[float, float, float, float]:
+    def read_measurements(self) -> tuple[float, float, float, float, float]:
         board_temperature = round(self.board.read_temperature(), 2)
-        temperature = round(self.humidity_temperature_sensor.read_temperature(), 2)
-        humidity = round(self.humidity_temperature_sensor.read_humidity(), 2)
-        pressure = round(self.pressure_temperature_sensor.read_pressure(), 2)
-        return board_temperature, temperature, humidity, pressure
 
-    def save_measurements(self, board_temperature, temperature, humidity) -> None:
+        ht_sensor_temperature = round(
+            self.humidity_temperature_sensor.read_temperature(), 2
+        )
+        ht_sensor_humidity = round(self.humidity_temperature_sensor.read_humidity(), 2)
+
+        pt_sensor_pressure = round(self.pressure_temperature_sensor.read_pressure(), 2)
+        pt_sensor_temperature = round(
+            self.humidity_temperature_sensor.read_temperature(), 2
+        )
+
+        return (
+            board_temperature,
+            ht_sensor_temperature,
+            ht_sensor_humidity,
+            pt_sensor_pressure,
+            pt_sensor_temperature,
+        )
+
+    def save_measurements(
+        self,
+        board_temperature: float,
+        ht_sensor_temperature: float,
+        ht_sensor_humidity: float,
+        pt_sensor_pressure: float,
+        pt_sensor_temperature: float,
+    ) -> None:
         with open(self.output_path, "a+") as file:
-            file.write(f"{board_temperature},{temperature},{humidity}\n")
+            file.write(
+                f"{board_temperature},{ht_sensor_temperature},{ht_sensor_humidity},{pt_sensor_pressure},{pt_sensor_temperature}\n"
+            )
 
     def read_saved_measurements(self, top: int) -> list[list[str]]:
         try:
@@ -36,8 +59,14 @@ class Reader:
                 lines = [line.rstrip().split(",") for line in list(file)]
                 # FIXME: I think this is a bad idea for long list of records
                 records = [
-                    [board_temperature, sensor_temperature, sensor_humidity]
-                    for board_temperature, sensor_temperature, sensor_humidity, *_ in lines[
+                    [
+                        board_temperature,
+                        ht_sensor_temperature,
+                        ht_sensor_humidity,
+                        pt_sensor_pressure,
+                        pt_sensor_temperature,
+                    ]
+                    for board_temperature, ht_sensor_temperature, ht_sensor_humidity, pt_sensor_pressure, pt_sensor_temperature, *_ in lines[
                         -top:
                     ]
                 ]
@@ -53,8 +82,7 @@ class Reader:
 
     async def read_loop(self, frequency) -> None:
         while True:
-            *measurements, pressure = self.read_measurements()
-            print(f"pressure: {pressure}")
+            measurements = self.read_measurements()
             print("Measurements made: ", *measurements)
             self.read_saved_measurements(10)
             self.save_measurements(*measurements)

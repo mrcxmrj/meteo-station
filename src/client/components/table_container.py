@@ -35,7 +35,7 @@ class TableContainer:
         return temperature_table, humidity_table
 
     def render(self) -> str:
-        current_board_temperature, current_temperature, current_humidity = (
+        current_board_temperature, current_temperature, current_humidity, *_ = (
             self.reader.read_measurements()
         )
         return f"""
