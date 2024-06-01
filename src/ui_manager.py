@@ -10,7 +10,7 @@ class UIManager:
         self.reader = reader
 
     def get_app_template(self, page: str):
-        if page == "table":
+        if page == "tables":
             page_template = self.get_table_container_template()
         elif page == "options":
             page_template = self.get_options_template()

@@ -1,11 +1,15 @@
-// alert("I work");
-async function getResponse() {
-  const response = await fetch("/table", {
-    headers: {
-      "x-no-refresh": true,
-    },
-  });
-  console.log(await response.text());
+async function refreshTable(tableId) {
+  try {
+    const response = await fetch("/tables", {
+      headers: {
+        "x-no-refresh": true,
+      },
+    });
+    const html = await response.text();
+    document.getElementById(tableId).innerHTML = html;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-getResponse();
+setInterval(() => refreshTable("temperature-table"), 1000);

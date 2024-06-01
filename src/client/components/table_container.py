@@ -31,7 +31,9 @@ class TableContainer:
                     <b>BMP280:</b> {current_bmp_temperature}°C
                     <hr>
                     <h3>History</h3>
+                    <div id="temperature-table">
                     {self.temperature_table_template}
+                    </div>
                 </article>
                 <article>
                     <h2>Humidity</h2>
@@ -40,7 +42,9 @@ class TableContainer:
                     <br><br><br>
                     <hr>
                     <h3>History</h3>
+                    <div id="humidity-table">
                     {self.humidity_table_template}
+                    </div>
                 </article>
                 <article>
                     <h2>Pressure</h2>
@@ -49,7 +53,9 @@ class TableContainer:
                     <br><br><br>
                     <hr>
                     <h3>History</h3>
+                    <div id="pressure-table">
                     {self.pressure_table_template}
+                    </div>
                 </article>
             </div>
         """

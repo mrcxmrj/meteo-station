@@ -6,23 +6,25 @@ class Router:
         self.ui_manager = ui_manager
 
     def route(
-        self, method: str, route: str, x_no_refresh: bool
+        self, method: str, full_route: str, x_no_refresh: bool
     ) -> tuple[int, str, str, str]:
-        print(f"Routing: {method}{route}")
-        print(x_no_refresh)
+        print(f"Routing: {method}{full_route}")
+        route = full_route.split("/")[1:]
+        # if route[-1] starts with "?" == params
+        print(route)
 
-        if route == "/" and method == "GET":
+        if route[0] == "" and method == "GET":
             return self.handle_get(self.ui_manager.get_app_template(page="index"))
 
-        if route == "/table" and method == "GET":
+        if route[0] == "tables" and method == "GET":
             template = (
                 self.ui_manager.get_table_container_template()
                 if x_no_refresh
-                else self.ui_manager.get_app_template(page="table")
+                else self.ui_manager.get_app_template(page="tables")
             )
             return self.handle_get(template)
 
-        if route == "/chart" and method == "GET":
+        if route[0] == "chart" and method == "GET":
             template = (
                 self.ui_manager.get_table_container_template()
                 if x_no_refresh
@@ -30,7 +32,7 @@ class Router:
             )
             return self.handle_get(self.ui_manager.get_app_template(page="chart"))
 
-        if route == "/options" and method == "GET":
+        if route[0] == "options" and method == "GET":
             template = (
                 self.ui_manager.get_table_container_template()
                 if x_no_refresh
@@ -38,12 +40,12 @@ class Router:
             )
             return self.handle_get(self.ui_manager.get_app_template(page="options"))
 
-        if route == "/clear-db" and method == "POST":
+        if route[0] == "clear-db" and method == "POST":
             return self.handle_post(
                 "Database cleared successfully", "Error clearing database"
             )
 
-        if route == "/js/script.js" and method == "GET":
+        if route[0] == "js" and route[1] == "script.js" and method == "GET":
             try:
                 with open("client/js/script.js", "r") as f:
                     body = f.read()
