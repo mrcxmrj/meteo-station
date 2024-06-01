@@ -7,23 +7,18 @@ class Router:
 
     def route(self, method: str, route: str) -> tuple[int, str, str, str]:
         print(f"Routing: {method}{route}")
-        if route == "/":
-            if method == "GET":
-                return self.handle_get(self.app_ui.render(page="index"))
-        if route == "/table":
-            if method == "GET":
-                return self.handle_get(self.app_ui.render(page="table"))
-        if route == "/chart":
-            if method == "GET":
-                return self.handle_get(self.app_ui.render(page="chart"))
-        if route == "/options":
-            if method == "GET":
-                return self.handle_get(self.app_ui.render(page="options"))
-        elif route == "/clear-db":
-            if method == "POST":
-                return self.handle_post(
-                    "Database cleared successfully", "Error clearing database"
-                )
+        if route == "/" and method == "GET":
+            return self.handle_get(self.app_ui.render(page="index"))
+        if route == "/table" and method == "GET":
+            return self.handle_get(self.app_ui.render(page="table"))
+        if route == "/chart" and method == "GET":
+            return self.handle_get(self.app_ui.render(page="chart"))
+        if route == "/options" and method == "GET":
+            return self.handle_get(self.app_ui.render(page="options"))
+        if route == "/clear-db" and method == "POST":
+            return self.handle_post(
+                "Database cleared successfully", "Error clearing database"
+            )
 
         print("Routing error: no route matched")
         return (
