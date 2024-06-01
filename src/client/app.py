@@ -27,16 +27,16 @@ class App:
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
             </head>
             <body>
-                <header>
-                    <div class="container">
-                    <h1>Pico W Dashboard</h1>
+                <header class="container">
                     <nav>
-                      <ul>
-                        <li><a href="/table" class="contrast">Table</a></li>
-                        <li><a href="/chart" class="contrast">Chart</a></li>
-                        <li><a href="/options" class="contrast">Options</a></li>
-                      </ul>
-                    </div class="container">
+                        <ul>
+                            <li><strong>Pico W Dashboard</strong></li>
+                        </ul>
+                        <ul>
+                            <li><a href="/table" class="contrast">Table</a></li>
+                            <li><a href="/chart" class="contrast">Chart</a></li>
+                            <li><a href="/options" class="contrast">Options</a></li>
+                        </ul>
                     </nav>
                 </header>
                 <div class="container">
