@@ -24,6 +24,9 @@ class Router:
             )
             return self.handle_get(template)
 
+        if route[0] == "table" and method == "GET":
+            return self.handle_get(self.ui_manager.get_table_template(route[1]))
+
         if route[0] == "chart" and method == "GET":
             template = (
                 self.ui_manager.get_table_container_template()
