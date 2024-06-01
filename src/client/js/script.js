@@ -1,10 +1,11 @@
 // alert("I work");
 async function getResponse() {
-  const response = await fetch("/", {
+  const response = await fetch("/table", {
     headers: {
-      "x-refresh": true,
+      "x-no-refresh": true,
     },
   });
+  console.log(await response.text());
 }
 
 getResponse();

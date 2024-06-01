@@ -41,17 +41,18 @@ class Server:
 
         request_line = await reader.readline()
         method, route, *_ = request_line.decode("utf-8").split()
-        status_code, reason_phrase, content_type, body = self.router.route(
-            method, route
-        )
 
+        x_no_refresh = False
         while True:
             line = await reader.readline()
-            if "x-refresh: true" in line:
-                print("partial")
-            print(line)
             if line == b"\r\n":
                 break
+            if "x-no-refresh: true" in line:
+                x_no_refresh = True
+
+        status_code, reason_phrase, content_type, body = self.router.route(
+            method, route, x_no_refresh
+        )
 
         writer.write(
             f"HTTP/1.0 {status_code} {reason_phrase}\r\nContent-type: {content_type}\r\n\r\n"

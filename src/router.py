@@ -5,15 +5,37 @@ class Router:
     def __init__(self, ui_manager: UIManager) -> None:
         self.ui_manager = ui_manager
 
-    def route(self, method: str, route: str) -> tuple[int, str, str, str]:
+    def route(
+        self, method: str, route: str, x_no_refresh: bool
+    ) -> tuple[int, str, str, str]:
         print(f"Routing: {method}{route}")
+        print(x_no_refresh)
+
         if route == "/" and method == "GET":
             return self.handle_get(self.ui_manager.get_app_template(page="index"))
+
         if route == "/table" and method == "GET":
-            return self.handle_get(self.ui_manager.get_app_template(page="table"))
+            template = (
+                self.ui_manager.get_table_container_template()
+                if x_no_refresh
+                else self.ui_manager.get_app_template(page="table")
+            )
+            return self.handle_get(template)
+
         if route == "/chart" and method == "GET":
+            template = (
+                self.ui_manager.get_table_container_template()
+                if x_no_refresh
+                else self.ui_manager.get_app_template(page="chart")
+            )
             return self.handle_get(self.ui_manager.get_app_template(page="chart"))
+
         if route == "/options" and method == "GET":
+            template = (
+                self.ui_manager.get_table_container_template()
+                if x_no_refresh
+                else self.ui_manager.get_app_template(page="options")
+            )
             return self.handle_get(self.ui_manager.get_app_template(page="options"))
 
         if route == "/clear-db" and method == "POST":
