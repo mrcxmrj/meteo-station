@@ -27,19 +27,18 @@ class App:
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
             </head>
             <body>
-                <header class="container">
+                <header>
+                    <div class="container">
                     <h1>Pico W Dashboard</h1>
+                    <nav>
+                      <ul>
+                        <li><a href="/table" class="contrast">Table</a></li>
+                        <li><a href="/chart" class="contrast">Chart</a></li>
+                        <li><a href="/options" class="contrast">Options</a></li>
+                      </ul>
+                    </div class="container">
+                    </nav>
                 </header>
-                <nav class="container">
-                  <ul>
-                    <li><strong>Acme Corp</strong></li>
-                  </ul>
-                  <ul>
-                    <li><a href="/table" class="contrast">Table</a></li>
-                    <li><a href="/chart" class="contrast">Chart</a></li>
-                    <li><a href="/options" class="contrast">Options</a></li>
-                  </ul>
-                </nav>
                 <div class="container">
                     { self.page.render()if self.page is not None else ""}
                 </div>

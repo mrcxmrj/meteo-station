@@ -74,6 +74,20 @@ class Reader:
         except OSError:
             return []
 
+    def read_saved_measurements_by_category(
+        self, top: int
+    ) -> tuple[list[list[str]], list[list[str]], list[list[str]]]:
+        temperature_records: list[list[str]] = []
+        humidity_records: list[list[str]] = []
+        pressure_records: list[list[str]] = []
+
+        records = self.read_saved_measurements(top)
+        for record in records:
+            temperature_records.append([record[0], record[2], record[4]])
+            humidity_records.append([record[1]])
+            pressure_records.append([record[3]])
+        return temperature_records, humidity_records, pressure_records
+
     def clear_measurements(self) -> None:
         try:
             os.remove(self.output_path)

@@ -17,15 +17,9 @@ class TableContainer:
         humidity_headers = ["DHT11"]
         pressure_headers = ["BMP280"]
 
-        temperature_records = []
-        humidity_records = []
-        pressure_records = []
-
-        records = self.reader.read_saved_measurements(top=5)
-        for record in records:
-            temperature_records.append([record[0], record[2], record[4]])
-            humidity_records.append([record[1]])
-            pressure_records.append([record[3]])
+        temperature_records, humidity_records, pressure_records = (
+            self.reader.read_saved_measurements_by_category(top=5)
+        )
 
         temperature_table = Table(
             temperature_headers,
