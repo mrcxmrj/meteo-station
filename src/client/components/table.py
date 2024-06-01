@@ -30,7 +30,7 @@ class Table:
         averages = [round(sum / len(self.records), 2) for sum in sums]
         footer_html: str = (
             "<tr>"
-            + '<th scope="row">Average</th>'
+            + '<th scope="row">Avg</th>'
             + "".join([f"<td>{average}{self.unit}</td>" for average in averages])
             + "</tr>"
         )
