@@ -1,23 +1,30 @@
 import asyncio
 import os
 
+from sensors.bmp280 import BMP280
 from sensors.dht11 import DHT11
 from sensors.pico import Pico
 
 
 class Reader:
     def __init__(
-        self, board: Pico, humidity_temperature_sensor: DHT11, output_path: str
+        self,
+        board: Pico,
+        humidity_temperature_sensor: DHT11,
+        pressure_temperature_sensor: BMP280,
+        output_path: str,
     ) -> None:
         self.board = board
         self.humidity_temperature_sensor = humidity_temperature_sensor
+        self.pressure_temperature_sensor = pressure_temperature_sensor
         self.output_path = output_path
 
-    def read_measurements(self) -> tuple[float, float, float]:
+    def read_measurements(self) -> tuple[float, float, float, float]:
         board_temperature = round(self.board.read_temperature(), 2)
         temperature = round(self.humidity_temperature_sensor.read_temperature(), 2)
         humidity = round(self.humidity_temperature_sensor.read_humidity(), 2)
-        return board_temperature, temperature, humidity
+        pressure = round(self.pressure_temperature_sensor.read_pressure(), 2)
+        return board_temperature, temperature, humidity, pressure
 
     def save_measurements(self, board_temperature, temperature, humidity) -> None:
         with open(self.output_path, "a+") as file:
@@ -46,7 +53,8 @@ class Reader:
 
     async def read_loop(self, frequency) -> None:
         while True:
-            measurements = self.read_measurements()
+            *measurements, pressure = self.read_measurements()
+            print(f"pressure: {pressure}")
             print("Measurements made: ", *measurements)
             self.read_saved_measurements(10)
             self.save_measurements(*measurements)

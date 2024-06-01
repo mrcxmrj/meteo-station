@@ -4,6 +4,7 @@ from client.app import App
 from config import WIFI_PASSWORD, WIFI_SSID
 from reader import Reader
 from router import Router
+from sensors.bmp280 import BMP280
 from sensors.dht11 import DHT11
 from sensors.pico import Pico
 from server import Server
@@ -12,7 +13,10 @@ ssid = WIFI_SSID
 password = WIFI_PASSWORD
 
 reader = Reader(
-    board=Pico(), humidity_temperature_sensor=DHT11(28), output_path="output.txt"
+    board=Pico(),
+    humidity_temperature_sensor=DHT11(pin_number=28),
+    pressure_temperature_sensor=BMP280(sda_pin_number=16, scl_pin_number=17),
+    output_path="output.txt",
 )
 reader.clear_measurements()
 
