@@ -22,10 +22,10 @@ class Reader:
     def read_measurements(self) -> tuple[float, float, float, float, float]:
         board_temperature = round(self.board.read_temperature(), 2)
 
+        ht_sensor_humidity = round(self.humidity_temperature_sensor.read_humidity(), 2)
         ht_sensor_temperature = round(
             self.humidity_temperature_sensor.read_temperature(), 2
         )
-        ht_sensor_humidity = round(self.humidity_temperature_sensor.read_humidity(), 2)
 
         pt_sensor_pressure = round(self.pressure_temperature_sensor.read_pressure(), 2)
         pt_sensor_temperature = round(
@@ -34,8 +34,8 @@ class Reader:
 
         return (
             board_temperature,
-            ht_sensor_temperature,
             ht_sensor_humidity,
+            ht_sensor_temperature,
             pt_sensor_pressure,
             pt_sensor_temperature,
         )
@@ -43,14 +43,14 @@ class Reader:
     def save_measurements(
         self,
         board_temperature: float,
-        ht_sensor_temperature: float,
         ht_sensor_humidity: float,
+        ht_sensor_temperature: float,
         pt_sensor_pressure: float,
         pt_sensor_temperature: float,
     ) -> None:
         with open(self.output_path, "a+") as file:
             file.write(
-                f"{board_temperature},{ht_sensor_temperature},{ht_sensor_humidity},{pt_sensor_pressure},{pt_sensor_temperature}\n"
+                f"{board_temperature},{ht_sensor_humidity},{ht_sensor_temperature},{pt_sensor_pressure},{pt_sensor_temperature}\n"
             )
 
     def read_saved_measurements(self, top: int) -> list[list[str]]:
@@ -61,12 +61,12 @@ class Reader:
                 records = [
                     [
                         board_temperature,
-                        ht_sensor_temperature,
                         ht_sensor_humidity,
+                        ht_sensor_temperature,
                         pt_sensor_pressure,
                         pt_sensor_temperature,
                     ]
-                    for board_temperature, ht_sensor_temperature, ht_sensor_humidity, pt_sensor_pressure, pt_sensor_temperature, *_ in lines[
+                    for board_temperature, ht_sensor_humidity, ht_sensor_temperature, pt_sensor_pressure, pt_sensor_temperature, *_ in lines[
                         -top:
                     ]
                 ]
