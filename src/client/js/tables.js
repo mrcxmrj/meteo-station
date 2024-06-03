@@ -17,20 +17,9 @@ async function refreshTables(tables) {
   await Promise.all(refreshPromises);
 }
 
-setInterval(() => refreshTables(["temperature", "humidity", "pressure"]), 1000);
-
-async function testJson() {
-  try {
-    const response = await fetch("/data/temperature", {});
-    const json = await response.text();
-    console.log(json);
-  } catch (error) {
-    console.error(error);
-  }
-}
-setTimeout(testJson, 3000);
+const periodicTableRefresh = setInterval(
+  () => refreshTables(["temperature", "humidity", "pressure"]),
+  1000,
+);
 // TODO:
 // - add refreshing for current readings (not whole table)
-// - stop refreshing when page != tables
-// const periodicTableRefresh = setInterval(() => refreshTables(["temperature", "humidity", "pressure"]), 1000);
-// if #table-container not in DOM then clearInterval(periodicTableRefresh)

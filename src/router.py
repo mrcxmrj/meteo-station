@@ -28,13 +28,13 @@ class Router:
         if route[0] == "table" and method == "GET":
             return self.handle_get(self.ui_manager.get_table_template(route[1]))
 
-        if route[0] == "chart" and method == "GET":
+        if route[0] == "charts" and method == "GET":
             template = (
-                self.ui_manager.get_table_container_template()
+                self.ui_manager.get_chart_container_template()
                 if x_no_refresh
-                else self.ui_manager.get_app_template(page="chart")
+                else self.ui_manager.get_app_template(page="charts")
             )
-            return self.handle_get(self.ui_manager.get_app_template(page="chart"))
+            return self.handle_get(self.ui_manager.get_app_template(page="charts"))
 
         if route[0] == "options" and method == "GET":
             template = (
@@ -53,9 +53,9 @@ class Router:
                 "Database cleared successfully", "Error clearing database"
             )
 
-        if route[0] == "js" and route[1] == "script.js" and method == "GET":
+        if route[0] == "js" and route[1] != "" and method == "GET":
             try:
-                with open("client/js/script.js", "r") as f:
+                with open(f"client/js/{route[1]}", "r") as f:
                     body = f.read()
                     return self.handle_get(body, type="js")
             except:

@@ -58,4 +58,5 @@ class TableContainer:
                     </div>
                 </article>
             </div>
+            <script src="js/tables.js" ></script>
         """

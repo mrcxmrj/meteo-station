@@ -27,7 +27,6 @@ class App:
                 <div class="container">
                     {self.page_template}
                 </div>
-                <script src="js/script.js" ></script>
             </body>
             </html>
         """

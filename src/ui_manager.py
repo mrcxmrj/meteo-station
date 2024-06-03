@@ -1,4 +1,5 @@
 from client.app import App
+from client.components.chart_container import ChartContainer
 from client.components.options import Options
 from client.components.table import Table
 from client.components.table_container import TableContainer
@@ -20,6 +21,8 @@ class UIManager:
             page_template = self.get_table_container_template()
         elif page == "options":
             page_template = self.get_options_template()
+        elif page == "charts":
+            page_template = self.get_chart_container_template()
         else:
             page_template = ""
         return App(page_template).render()
@@ -61,6 +64,9 @@ class UIManager:
 
     def get_options_template(self):
         return Options().render()
+
+    def get_chart_container_template(self):
+        return ChartContainer()
 
     def get_chart_data(self, category: str):
         return self.reader.read_saved_measurements_by_category(category)
