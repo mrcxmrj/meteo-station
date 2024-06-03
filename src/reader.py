@@ -1,5 +1,6 @@
 import asyncio
 import os
+import time
 
 from sensors.bmp280 import BMP280
 from sensors.dht11 import DHT11
@@ -12,12 +13,16 @@ class Reader:
         board: Pico,
         humidity_temperature_sensor: DHT11,
         pressure_temperature_sensor: BMP280,
-        output_path: str,
+        output_directory: str,
     ) -> None:
         self.board = board
         self.humidity_temperature_sensor = humidity_temperature_sensor
         self.pressure_temperature_sensor = pressure_temperature_sensor
-        self.output_path = output_path
+        try:
+            os.mkdir(output_directory)
+        except:
+            pass
+        self.output_path = output_directory + "/output.txt"
 
     def read_measurements(self) -> tuple[float, float, float, float, float]:
         board_temperature = round(self.board.read_temperature(), 2)
@@ -39,6 +44,13 @@ class Reader:
             pt_sensor_pressure,
             pt_sensor_temperature,
         )
+
+    def save_timed_measurements(self, output_path: str, content: str) -> None:
+        (year, month, mday, hour, minute, *_) = time.localtime()
+        timestamp = f"{year}-{month}-{mday}|{hour}:{minute}"
+        with open(output_path, "a+") as file:
+            file.write(timestamp + " " + content)
+        pass
 
     def save_measurements(
         self,

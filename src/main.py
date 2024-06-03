@@ -16,7 +16,7 @@ reader = Reader(
     board=Pico(),
     humidity_temperature_sensor=DHT11(pin_number=28),
     pressure_temperature_sensor=BMP280(sda_pin_number=16, scl_pin_number=17),
-    output_path="output.txt",
+    output_directory="db",
 )
 reader.clear_measurements()
 

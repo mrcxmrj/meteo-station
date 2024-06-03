@@ -18,3 +18,8 @@ async function refreshTables(tables) {
 }
 
 setInterval(() => refreshTables(["temperature", "humidity", "pressure"]), 1000);
+// TODO:
+// - add refreshing for current readings (not whole table)
+// - stop refreshing when page != tables
+// const periodicTableRefresh = setInterval(() => refreshTables(["temperature", "humidity", "pressure"]), 1000);
+// if #table-container not in DOM then clearInterval(periodicTableRefresh)
