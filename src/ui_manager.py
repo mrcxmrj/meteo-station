@@ -62,5 +62,5 @@ class UIManager:
     def get_options_template(self):
         return Options().render()
 
-    # def get_chart_data(self, category):
-    #     return self.reader.
+    def get_chart_data(self, category: str):
+        return self.reader.read_saved_measurements_by_category(category)

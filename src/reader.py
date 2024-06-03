@@ -49,7 +49,7 @@ class Reader:
         )
 
     def read_saved_measurements_by_category(
-        self, top: int, category: str = "all"
+        self, category: str = "all", top: int = 0
     ) -> list[dict[str, str | list[str]]]:
         if category == "temperature":
             return self.read_saved_measurements(self.temperature_output_path, top)
@@ -61,7 +61,7 @@ class Reader:
             return []
 
     def read_saved_measurements(
-        self, output_path: str, top: int
+        self, output_path: str, top: int = 0
     ) -> list[dict[str, str | list[str]]]:
         try:
             with open(output_path, "r") as file:

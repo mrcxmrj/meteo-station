@@ -1,3 +1,5 @@
+import json
+
 from ui_manager import UIManager
 
 
@@ -11,7 +13,6 @@ class Router:
         print(f"Routing: {method}{full_route}")
         route = full_route.split("/")[1:]
         # if route[-1] starts with "?" == params
-        print(route)
 
         if route[0] == "" and method == "GET":
             return self.handle_get(self.ui_manager.get_app_template(page="index"))
@@ -43,6 +44,10 @@ class Router:
             )
             return self.handle_get(self.ui_manager.get_app_template(page="options"))
 
+        if route[0] == "data" and route[1] != "" and method == "GET":
+            json_data = json.dumps(self.ui_manager.get_chart_data("temperature"))
+            return self.handle_get(json_data, "json")
+
         if route[0] == "clear-db" and method == "POST":
             return self.handle_post(
                 "Database cleared successfully", "Error clearing database"
@@ -68,27 +73,30 @@ class Router:
         try:
             return 200, "OK", f"text/{type}", body
         except:
-            return (
-                500,
-                "Internal Server Error",
-                "text/html",
-                "<p>Internal Server Error: Something went wrong :/</p>",
-            )
+            if type == "html":
+                return (
+                    500,
+                    "Internal Server Error",
+                    "text/html",
+                    "<p>Internal Server Error: Something went wrong :/</p>",
+                )
+            else:
+                return (
+                    500,
+                    "Internal Server Error",
+                    "text/json",
+                    json.dumps({"message": "Internal Server Error"}),
+                )
 
     def handle_post(
         self, message: str, error_message: str
     ) -> tuple[int, str, str, str]:
         try:
-            return (
-                200,
-                "OK",
-                "text/html",
-                f'{{"message": {message}}}',
-            )
+            return (200, "OK", "text/json", json.dumps({"message": message}))
         except:
             return (
                 500,
                 "Internal Server Error",
-                "text/html",
-                f'{{"message": {error_message}}}',
+                "text/json",
+                json.dumps({"message": error_message}),
             )
