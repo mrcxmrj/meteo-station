@@ -2,6 +2,7 @@ const chartContainer = document.getElementById("chart");
 const unit = "hPa";
 const valueFormatter = (value) => `${Math.round(value * 100) / 100}${unit}`;
 
+console.log("creating chart");
 const chart = LightweightCharts.createChart(chartContainer, {
   height: 500,
   autoSize: true,

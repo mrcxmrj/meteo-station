@@ -66,7 +66,7 @@ class UIManager:
         return Options().render()
 
     def get_chart_container_template(self):
-        return ChartContainer()
+        return ChartContainer().render()
 
     def get_chart_data(self, category: str):
         return self.reader.read_saved_measurements_by_category(category)
