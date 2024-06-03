@@ -1,5 +1,4 @@
 const chartContainer = document.getElementById("chart");
-const unit = "hPa";
 const colors = { blue: "#3674d9", red: "#eb4034", green: "#32a852" };
 const valueFormatter = (value) => `${Math.round(value * 100) / 100}${unit}`;
 

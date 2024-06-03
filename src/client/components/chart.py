@@ -8,6 +8,14 @@ class Chart:
         self.records = records
         self.category = category
 
+    def get_unit(self):
+        if self.category == "temperature":
+            return "°C"
+        elif self.category == "humidity":
+            return "%"
+        else:
+            return "hPa"
+
     def render(self):
         return f"""
             <div id="chart">
@@ -15,6 +23,7 @@ class Chart:
             <script>
                 const initialData = {json.dumps(self.records)}
                 const category = "{self.category}"
+                const unit = "{self.get_unit()}";
             </script>
             <script src="js/chart.js"></script>
         """
