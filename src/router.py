@@ -13,6 +13,9 @@ class Router:
         print(f"Routing: {method}{full_route}")
         route = full_route.split("/")[1:]
         # if route[-1] starts with "?" == params
+        if "js" in route:
+            route = route[route.index("js") :]
+            print(f"Rerouting to {"/".join(route)}")
 
         if route[0] == "" and method == "GET":
             return self.handle_get(self.ui_manager.get_app_template(page="index"))
@@ -29,12 +32,18 @@ class Router:
             return self.handle_get(self.ui_manager.get_table_template(route[1]))
 
         if route[0] == "charts" and method == "GET":
-            template = (
-                self.ui_manager.get_chart_container_template()
-                if x_no_refresh
-                else self.ui_manager.get_app_template(page="charts")
+            try:
+                category = route[1]
+            except:
+                category = "temperature"
+            # template = (
+            #     self.ui_manager.get_chart_container_template(subpage)
+            #     if x_no_refresh
+            #     else self.ui_manager.get_app_template(page="charts", subpage=subpage)
+            # )
+            return self.handle_get(
+                self.ui_manager.get_app_template(page="charts", subpage=category)
             )
-            return self.handle_get(self.ui_manager.get_app_template(page="charts"))
 
         if route[0] == "options" and method == "GET":
             template = (
@@ -44,8 +53,12 @@ class Router:
             )
             return self.handle_get(self.ui_manager.get_app_template(page="options"))
 
-        if route[0] == "data" and route[1] != "" and method == "GET":
-            json_data = json.dumps(self.ui_manager.get_chart_data("temperature"))
+        if route[0] == "data" and method == "GET":
+            try:
+                category = route[1]
+            except:
+                category = "temperature"
+            json_data = json.dumps(self.ui_manager.get_chart_data(category))
             return self.handle_get(json_data, "json")
 
         if route[0] == "clear-db" and method == "POST":
@@ -53,7 +66,7 @@ class Router:
                 "Database cleared successfully", "Error clearing database"
             )
 
-        if route[0] == "js" and route[1] != "" and method == "GET":
+        if route[0] == "js" and method == "GET":
             try:
                 with open(f"client/js/{route[1]}", "r") as f:
                     body = f.read()
