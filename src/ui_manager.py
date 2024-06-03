@@ -66,7 +66,7 @@ class UIManager:
 
     def get_chart_container_template(self, category: str = "temperature"):
         return ChartContainer(
-            self.reader.read_saved_measurements_by_category(category)
+            self.reader.read_saved_measurements_by_category(category), category
         ).render()
 
     def get_chart_data(self, category: str):

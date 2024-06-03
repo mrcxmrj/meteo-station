@@ -43,10 +43,10 @@ const series = createSeries(chart, processedData);
 
 async function getNewData() {
   try {
-    const response = await fetch(`/data/temperature`);
+    const response = await fetch(`/data/${category}`);
     const json = await response.json();
     const processedData = processData(json);
-    processedData.forEach((data, i) => {
+    processedData?.forEach((data, i) => {
       series[i].update(...data);
     });
   } catch (error) {
