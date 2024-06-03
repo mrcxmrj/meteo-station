@@ -23,6 +23,9 @@ class Reader:
         except:
             pass
         self.output_path = output_directory + "/output.txt"
+        self.temperature_output_path = output_directory + "/temperature.txt"
+        self.humidity_output_path = output_directory + "/humidity.txt"
+        self.pressure_output_path = output_directory + "/pressure.txt"
 
     def read_measurements(self) -> tuple[float, float, float, float, float]:
         board_temperature = round(self.board.read_temperature(), 2)
@@ -47,10 +50,23 @@ class Reader:
 
     def save_timed_measurements(self, output_path: str, content: str) -> None:
         (year, month, mday, hour, minute, *_) = time.localtime()
-        timestamp = f"{year}-{month}-{mday}|{hour}:{minute}"
+        timestamp = f"{year}-{month}-{mday} {hour}:{minute}"
         with open(output_path, "a+") as file:
-            file.write(timestamp + " " + content)
+            file.write(timestamp + "|" + content)
         pass
+
+    def read_saved_timed_measurements(
+        self, output_path: str, top: int
+    ) -> list[dict[str, str]]:
+        try:
+            with open(output_path, "r") as file:
+                lines = [line.rstrip().split("|") for line in list(file)]
+                return [
+                    {"time": timestamp, "values": values}
+                    for timestamp, values in lines[-top:]
+                ]
+        except OSError:
+            return []
 
     def save_measurements(
         self,
@@ -64,6 +80,12 @@ class Reader:
             file.write(
                 f"{board_temperature},{ht_sensor_humidity},{ht_sensor_temperature},{pt_sensor_pressure},{pt_sensor_temperature}\n"
             )
+        self.save_timed_measurements(
+            self.temperature_output_path,
+            f"{board_temperature},{ht_sensor_temperature},{pt_sensor_temperature}\n",
+        )
+        self.save_timed_measurements(self.humidity_output_path, str(ht_sensor_humidity))
+        self.save_timed_measurements(self.pressure_output_path, str(pt_sensor_pressure))
 
     def read_saved_measurements(self, top: int) -> list[list[str]]:
         try:
@@ -103,13 +125,21 @@ class Reader:
     def clear_measurements(self) -> None:
         try:
             os.remove(self.output_path)
+            os.remove(self.temperature_output_path)
+            os.remove(self.humidity_output_path)
+            os.remove(self.pressure_output_path)
         except OSError:
+            print("Error clearing measurements")
             pass
 
     async def read_loop(self, frequency) -> None:
         while True:
             measurements = self.read_measurements()
             print("Measurements made: ", *measurements)
+            timed_measurements = self.read_saved_timed_measurements(
+                self.temperature_output_path, 5
+            )
+            print("Saved temperature: " + str(timed_measurements))
             self.read_saved_measurements(10)
             self.save_measurements(*measurements)
             await asyncio.sleep(frequency)
