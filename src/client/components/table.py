@@ -1,6 +1,6 @@
 class Table:
     def __init__(
-        self, headers: list[str], records: list[dict[str, str]], unit: str
+        self, headers: list[str], records: list[dict[str, str | list[str]]], unit: str
     ) -> None:
         self.headers = headers
         self.records = records
@@ -16,7 +16,7 @@ class Table:
 
     def create_records(self) -> list[str]:
         return [
-            "".join([f"<td>{value}{self.unit}</td>" for value in record])
+            "".join([f"<td>{value}{self.unit}</td>" for value in record["values"]])
             for record in self.records
         ]
 
@@ -32,7 +32,7 @@ class Table:
     def calculate_averages(self) -> list[float]:
         sums = [0.0 for _ in self.headers]
         for record in self.records:
-            for i, value in enumerate(record):
+            for i, value in enumerate(record["values"]):
                 sums[i] += float(value)
         return [round(sum / len(self.records), 2) for sum in sums]
 

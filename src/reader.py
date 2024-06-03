@@ -48,25 +48,36 @@ class Reader:
             pt_sensor_temperature,
         )
 
-    def save_timed_measurements(self, output_path: str, content: str) -> None:
-        (year, month, mday, hour, minute, *_) = time.localtime()
-        timestamp = f"{year}-{month}-{mday} {hour}:{minute}"
-        with open(output_path, "a+") as file:
-            file.write(timestamp + "|" + content)
-        pass
+    def read_saved_measurements_by_category(
+        self, top: int, category: str = "all"
+    ) -> list[dict[str, str | list[str]]]:
+        if category == "temperature":
+            return self.read_saved_measurements(self.temperature_output_path, top)
+        elif category == "humidity":
+            return self.read_saved_measurements(self.humidity_output_path, top)
+        elif category == "pressure":
+            return self.read_saved_measurements(self.pressure_output_path, top)
+        else:
+            return []
 
-    def read_saved_timed_measurements(
+    def read_saved_measurements(
         self, output_path: str, top: int
-    ) -> list[dict[str, str]]:
+    ) -> list[dict[str, str | list[str]]]:
         try:
             with open(output_path, "r") as file:
                 lines = [line.rstrip().split("|") for line in list(file)]
                 return [
-                    {"time": timestamp, "values": values}
-                    for timestamp, values in lines[-top:]
+                    {"time": timestamp, "values": values.split(",")}
+                    for timestamp, values, *_ in lines[-top:]
                 ]
         except OSError:
             return []
+
+    def save_measurements_for_category(self, output_path: str, content: str) -> None:
+        (year, month, mday, hour, minute, *_) = time.localtime()
+        timestamp = f"{year}-{month}-{mday} {hour}:{minute}"
+        with open(output_path, "a+") as file:
+            file.write(timestamp + "|" + content)
 
     def save_measurements(
         self,
@@ -80,47 +91,16 @@ class Reader:
             file.write(
                 f"{board_temperature},{ht_sensor_humidity},{ht_sensor_temperature},{pt_sensor_pressure},{pt_sensor_temperature}\n"
             )
-        self.save_timed_measurements(
+        self.save_measurements_for_category(
             self.temperature_output_path,
             f"{board_temperature},{ht_sensor_temperature},{pt_sensor_temperature}\n",
         )
-        self.save_timed_measurements(self.humidity_output_path, str(ht_sensor_humidity))
-        self.save_timed_measurements(self.pressure_output_path, str(pt_sensor_pressure))
-
-    def read_saved_measurements(self, top: int) -> list[list[str]]:
-        try:
-            with open(self.output_path, "r") as file:
-                lines = [line.rstrip().split(",") for line in list(file)]
-                # FIXME: I think this is a bad idea for long list of records
-                records = [
-                    [
-                        board_temperature,
-                        ht_sensor_humidity,
-                        ht_sensor_temperature,
-                        pt_sensor_pressure,
-                        pt_sensor_temperature,
-                    ]
-                    for board_temperature, ht_sensor_humidity, ht_sensor_temperature, pt_sensor_pressure, pt_sensor_temperature, *_ in lines[
-                        -top:
-                    ]
-                ]
-                return records
-        except OSError:
-            return []
-
-    def read_saved_measurements_by_category(
-        self, top: int
-    ) -> tuple[list[list[str]], list[list[str]], list[list[str]]]:
-        temperature_records: list[list[str]] = []
-        humidity_records: list[list[str]] = []
-        pressure_records: list[list[str]] = []
-
-        records = self.read_saved_measurements(top)
-        for record in records:
-            temperature_records.append([record[0], record[2], record[4]])
-            humidity_records.append([record[1]])
-            pressure_records.append([record[3]])
-        return temperature_records, humidity_records, pressure_records
+        self.save_measurements_for_category(
+            self.humidity_output_path, f"{ ht_sensor_humidity }\n"
+        )
+        self.save_measurements_for_category(
+            self.pressure_output_path, f"{ pt_sensor_pressure }\n"
+        )
 
     def clear_measurements(self) -> None:
         try:
@@ -136,10 +116,5 @@ class Reader:
         while True:
             measurements = self.read_measurements()
             print("Measurements made: ", *measurements)
-            timed_measurements = self.read_saved_timed_measurements(
-                self.temperature_output_path, 5
-            )
-            print("Saved temperature: " + str(timed_measurements))
-            self.read_saved_measurements(10)
             self.save_measurements(*measurements)
             await asyncio.sleep(frequency)

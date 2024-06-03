@@ -26,25 +26,25 @@ class UIManager:
 
     def get_table_template(self, table_type: str):
         # TODO: split into 3 txt files so we don't read all of these at once
-        temperature_records, humidity_records, pressure_records = (
-            self.reader.read_saved_measurements_by_category(top=5)
+        records = self.reader.read_saved_measurements_by_category(
+            category=table_type, top=5
         )
         if table_type == "temperature":
             return Table(
                 ["internal", "DHT11", "BMP280"],
-                temperature_records,
+                records,
                 "°C",
             ).render()
         if table_type == "humidity":
             return Table(
                 ["DHT11"],
-                humidity_records,
+                records,
                 "%",
             ).render()
         if table_type == "pressure":
             return Table(
                 ["BMP280"],
-                pressure_records,
+                records,
                 "hPa",
             ).render()
         return ""
@@ -61,3 +61,6 @@ class UIManager:
 
     def get_options_template(self):
         return Options().render()
+
+    # def get_chart_data(self, category):
+    #     return self.reader.
