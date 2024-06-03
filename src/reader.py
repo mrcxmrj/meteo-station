@@ -74,10 +74,11 @@ class Reader:
             return []
 
     def save_measurements_for_category(self, output_path: str, content: str) -> None:
-        (year, month, mday, hour, minute, *_) = time.localtime()
-        timestamp = f"{year}-{month}-{mday} {hour}:{minute}"
+        # (year, month, mday, hour, minute, second, *_) = time.localtime()
+        # timestamp = f"{year}-{month}-{mday} {hour}:{minute}:{second}"
+        timestamp = time.time()
         with open(output_path, "a+") as file:
-            file.write(timestamp + "|" + content)
+            file.write(str(timestamp) + "|" + content)
 
     def save_measurements(
         self,

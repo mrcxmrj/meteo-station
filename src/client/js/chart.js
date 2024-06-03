@@ -1,8 +1,33 @@
 const chartContainer = document.getElementById("chart");
 const unit = "hPa";
+const colors = { blue: "#3674d9", red: "#eb4034", green: "#32a852" };
 const valueFormatter = (value) => `${Math.round(value * 100) / 100}${unit}`;
 
-console.log("creating chart");
+function processData(data) {
+  const splitData = data.map((el) =>
+    el.values.map((value) => ({
+      time: parseInt(el.time),
+      value: parseFloat(value),
+    })),
+  );
+
+  let result = [];
+  for (const i in splitData[0]) {
+    result.push(splitData.map((records) => records[i]));
+  }
+  return result;
+}
+
+function createSeries(chart, datas) {
+  const colorArray = Object.values(colors);
+  return datas.map((data, i) => {
+    console.log(data);
+    const temperatureSeries = chart.addLineSeries({ color: colorArray[i] });
+    temperatureSeries.setData(data);
+    return temperatureSeries;
+  });
+}
+
 const chart = LightweightCharts.createChart(chartContainer, {
   height: 500,
   autoSize: true,
@@ -13,23 +38,19 @@ const chart = LightweightCharts.createChart(chartContainer, {
   localization: { priceFormatter: valueFormatter },
 });
 
-const createMockSeries = (length) =>
-  Array.from({ length: length }, (_, i) => ({
-    time: `2019-04-${(i + 1) % 30}`,
-    value: Math.random(),
-  }));
+const processedData = processData(initialData);
+const series = createSeries(chart, processedData);
 
-const temperatureSeries = chart.addLineSeries({ color: "#eb4034" });
-temperatureSeries.setData(createMockSeries(20));
-
-const humiditySeries = chart.addLineSeries();
-humiditySeries.setData(createMockSeries(20));
-
-setInterval(
-  () =>
-    temperatureSeries.update({
-      time: new Date().toDateString(),
-      value: Math.random() * 100,
-    }),
-  5000,
-);
+async function getNewData() {
+  try {
+    const response = await fetch(`/data/temperature`);
+    const json = await response.json();
+    const processedData = processData(json);
+    processedData.forEach((data, i) => {
+      series[i].update(...data);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+setInterval(getNewData, 3000);

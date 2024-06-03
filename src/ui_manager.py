@@ -28,7 +28,6 @@ class UIManager:
         return App(page_template).render()
 
     def get_table_template(self, table_type: str):
-        # TODO: split into 3 txt files so we don't read all of these at once
         records = self.reader.read_saved_measurements_by_category(
             category=table_type, top=5
         )
@@ -66,7 +65,9 @@ class UIManager:
         return Options().render()
 
     def get_chart_container_template(self):
-        return ChartContainer().render()
+        return ChartContainer(
+            self.reader.read_saved_measurements_by_category("temperature")
+        ).render()
 
     def get_chart_data(self, category: str):
-        return self.reader.read_saved_measurements_by_category(category)
+        return self.reader.read_saved_measurements_by_category(category, 1)
