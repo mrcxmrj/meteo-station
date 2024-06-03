@@ -35,7 +35,7 @@ class Router:
             try:
                 category = route[1]
             except:
-                category = "temperature"
+                category = ""
             # template = (
             #     self.ui_manager.get_chart_container_template(subpage)
             #     if x_no_refresh

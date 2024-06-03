@@ -1,26 +1,13 @@
-import json
-
-
 class ChartContainer:
-    def __init__(
-        self, records: list[dict[str, str | list[str]]], category: str
-    ) -> None:
-        self.records = records
-        self.category = category
+    def __init__(self, chart_template: str) -> None:
+        self.chart_template = chart_template
 
     def render(self):
         return f"""
+            <script src="https://unpkg.com/lightweight-charts@4.1.4/dist/lightweight-charts.standalone.production.js"></script>
             <div class="container">
-                <h2>{self.category}</h2>
                 <article>
-                    <div id="chart">
-                    </div>
+                    {self.chart_template}
                 </article>
             </div>
-            <script src="https://unpkg.com/lightweight-charts@4.1.4/dist/lightweight-charts.standalone.production.js"></script>
-            <script>
-                const initialData = {json.dumps(self.records)}
-                const category = "{self.category}"
-            </script>
-            <script src="js/chart.js"></script>
         """

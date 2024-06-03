@@ -1,4 +1,5 @@
 from client.app import App
+from client.components.chart import Chart
 from client.components.chart_container import ChartContainer
 from client.components.options import Options
 from client.components.table import Table
@@ -64,10 +65,13 @@ class UIManager:
     def get_options_template(self):
         return Options().render()
 
-    def get_chart_container_template(self, category: str = "temperature"):
-        return ChartContainer(
+    def get_chart_template(self, category: str):
+        return Chart(
             self.reader.read_saved_measurements_by_category(category), category
         ).render()
+
+    def get_chart_container_template(self, category: str):
+        return ChartContainer(self.get_chart_template(category)).render()
 
     def get_chart_data(self, category: str):
         return self.reader.read_saved_measurements_by_category(category, 1)
