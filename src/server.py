@@ -1,3 +1,4 @@
+import gc
 import time
 
 import network
@@ -60,6 +61,7 @@ class Server:
         if body:
             writer.write(body)
 
+        gc.collect()
         await writer.drain()
         await writer.wait_closed()
         print("Client Disconnected")

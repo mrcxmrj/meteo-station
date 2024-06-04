@@ -65,6 +65,8 @@ class Reader:
     ) -> list[dict[str, str | list[str]]]:
         try:
             with open(output_path, "r") as file:
+                # this is problematic for long list of records
+                # probably should be switched to a for loop, so I don't allocate as much RAM at once
                 lines = [line.rstrip().split("|") for line in list(file)]
                 return [
                     {"time": timestamp, "values": values.split(",")}

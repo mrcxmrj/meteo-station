@@ -66,6 +66,7 @@ class UIManager:
         return Options().render()
 
     def get_chart_template(self, category: str):
+        # this is problematic for long list of records
         return Chart(
             self.reader.read_saved_measurements_by_category(category), category
         ).render()
