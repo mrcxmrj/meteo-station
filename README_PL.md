@@ -41,9 +41,13 @@ uruchamianie REPL, konfigurowanie WiFi) przygotowałem skrypt Bash.
 
 ## Projekt układu cyfrowego
 
-|           Schemat            |                  Wynik                   |
-| :--------------------------: | :--------------------------------------: |
-| ![schema](./docs/schema.png) | ![circuit image](./docs/circuit_irl.jpg) |
+### Schemat
+
+![](./docs/schema_white.png)
+
+### Wynik
+
+![](./docs/circuit_irl.jpg)
 
 ## Architektura oprogramowania
 
@@ -51,7 +55,7 @@ uruchamianie REPL, konfigurowanie WiFi) przygotowałem skrypt Bash.
 
 Serwer został zaimplementowany zgodnie z następującym diagramem:
 
-![uml diagram](./docs/uml_pl.png)
+![](./docs/uml_pl_white.png)
 
 ### Wynik
 
@@ -106,23 +110,23 @@ gc.collect()
 
 ### Źródła
 
-https://datasheets.raspberrypi.com/picow/connecting-to-the-internet-with-pico-w.pdf
-https://datasheets.raspberrypi.com/pico/raspberry-pi-pico-python-sdk.pdf
-https://docs.micropython.org/
-https://github.com/micropython/micropython/issues/8736
-https://github.com/orgs/micropython/discussions/9096
-https://forum.micropython.org/viewtopic.php?t=9369
-https://medium.com/@chirag.singla/http2-pipelining-and-multiplexing-7208572cf37e
-https://www.halvorsen.blog/documents/technology/iot/pico/pico_temperature_sensor_builtin.
-php https://mathspp.com/blog/sockets-for-dummies
-https://docs.python.org/3/howto/sockets.html
-https://thesolderingstation.com/how-to/how-to-solder-header-pins/
-https://electrocredible.com/raspberry-pi-pico-serial-uart-micropython/
-https://www.instructables.com/DHT11-With-Raspberry-Pi-Pico/
-https://forums.raspberrypi.com/viewtopic.php?t=222791
-https://docs.micropython.org/en/latest/esp8266/tutorial/dht.html
-https://randomnerdtutorials.com/raspberry-pi-pico-dht11-dht22-micropython/
-https://randomnerdtutorials.com/raspberry-pi-pico-w-asynchronous-web-server-micropython/
-https://electrocredible.com/bmp280-raspberry-pi-pico-micropython-guide/
-https://stackoverflow.com/questions/14081189/how-to-parse-a-post-requests-body
-https://stackoverflow.com/questions/73720122/how-does-parsing-the-multipart-form-data-http-request-work
+[www.datasheets.raspberrypi.com/picow/connecting-to-the-internet-with-pico-w.pdf](https://datasheets.raspberrypi.com/picow/connecting-to-the-internet-with-pico-w.pdf)  
+[www.datasheets.raspberrypi.com/pico/raspberry-pi-pico-python-sdk.pdf](https://datasheets.raspberrypi.com/pico/raspberry-pi-pico-python-sdk.pdf)  
+[www.docs.micropython.org/](https://docs.micropython.org/)  
+[www.github.com/micropython/micropython/issues/8736](https://github.com/micropython/micropython/issues/8736)  
+[www.github.com/orgs/micropython/discussions/9096](https://github.com/orgs/micropython/discussions/9096)  
+[www.forum.micropython.org/viewtopic.php?t=9369](https://forum.micropython.org/viewtopic.php?t=9369)  
+[www.medium.com/@chirag.singla/http2-pipelining-and-multiplexing-7208572cf37e](https://medium.com/@chirag.singla/http2-pipelining-and-multiplexing-7208572cf37e)  
+[www.www.halvorsen.blog/documents/technology/iot/pico/pico_temperature_sensor_builtin.php](https://www.halvorsen.blog/documents/technology/iot/pico/pico_temperature_sensor_builtin.php)  
+[www.mathspp.com/blog/sockets-for-dummies](https://mathspp.com/blog/sockets-for-dummies)  
+[www.docs.python.org/3/howto/sockets.html](https://docs.python.org/3/howto/sockets.html)  
+[www.thesolderingstation.com/how-to/how-to-solder-header-pins/](https://thesolderingstation.com/how-to/how-to-solder-header-pins/)  
+[www.electrocredible.com/raspberry-pi-pico-serial-uart-micropython/](https://electrocredible.com/raspberry-pi-pico-serial-uart-micropython/)  
+[www.www.instructables.com/DHT11-With-Raspberry-Pi-Pico/](https://www.instructables.com/DHT11-With-Raspberry-Pi-Pico/)  
+[www.forums.raspberrypi.com/viewtopic.php?t=222791](https://forums.raspberrypi.com/viewtopic.php?t=222791)  
+[www.docs.micropython.org/en/latest/esp8266/tutorial/dht.html](https://docs.micropython.org/en/latest/esp8266/tutorial/dht.html)  
+[www.randomnerdtutorials.com/raspberry-pi-pico-dht11-dht22-micropython/](https://randomnerdtutorials.com/raspberry-pi-pico-dht11-dht22-micropython/)  
+[www.randomnerdtutorials.com/raspberry-pi-pico-w-asynchronous-web-server-micropython/](https://randomnerdtutorials.com/raspberry-pi-pico-w-asynchronous-web-server-micropython/)  
+[www.electrocredible.com/bmp280-raspberry-pi-pico-micropython-guide/](https://electrocredible.com/bmp280-raspberry-pi-pico-micropython-guide/)  
+[www.stackoverflow.com/questions/14081189/how-to-parse-a-post-requests-body](https://stackoverflow.com/questions/14081189/how-to-parse-a-post-requests-body)  
+[www.stackoverflow.com/questions/73720122/how-does-parsing-the-multipart-form-data-http-request-work](https://stackoverflow.com/questions/73720122/how-does-parsing-the-multipart-form-data-http-request-work)
