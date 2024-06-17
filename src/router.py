@@ -36,14 +36,12 @@ class Router:
                 category = route[1]
             except:
                 category = ""
-            # template = (
-            #     self.ui_manager.get_chart_container_template(subpage)
-            #     if x_no_refresh
-            #     else self.ui_manager.get_app_template(page="charts", subpage=subpage)
-            # )
-            return self.handle_get(
-                self.ui_manager.get_app_template(page="charts", subpage=category)
+            template = (
+                self.ui_manager.get_chart_container_template(category)
+                if x_no_refresh
+                else self.ui_manager.get_app_template(page="charts", subpage=category)
             )
+            return self.handle_get(template)
 
         if route[0] == "options" and method == "GET":
             template = (

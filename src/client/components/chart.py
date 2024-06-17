@@ -21,9 +21,9 @@ class Chart:
             <div id="chart">
             </div>
             <script>
-                const initialData = {json.dumps(self.records)}
-                const category = "{self.category}"
-                const unit = "{self.get_unit()}";
+                console.log("Loaded data for {self.category}");
+                var initialData = {json.dumps(self.records)};
+                var unit = "{self.get_unit()}";
             </script>
             <script src="js/chart.js"></script>
         """
