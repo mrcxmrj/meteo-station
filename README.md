@@ -11,6 +11,7 @@ I used the hottest tech stack in the web-apps-for-microcontrollers world:
 - Txt
 - Vanilla JS
 - Pico CSS
+- Lightweight Charts
 
 ## Circuit
 
@@ -47,3 +48,14 @@ import gc
 # this runs after sending responses to clean up all UI component objects
 gc.collect()
 ```
+
+## Preview
+
+![Table view ](./docs/preview_tables.png)
+![Chart view - pressure](./docs/preview_chart_pressure.png)
+![Chart view - temperature](./docs/preview_chart_temperature.png)
+
+## Credits
+
+[dafvid/micropython-bmp280](https://github.com/dafvid/micropython-bmp280/tree/master) -
+custom driver for BMP280
