@@ -5,6 +5,7 @@ const getCurrentCategory = () => {
   const routes = url.pathname.split("/");
   return routes[routes.length - 1];
 };
+let refreshIntervalId;
 
 function processData(data) {
   const splitData = data.map((el) =>
@@ -70,7 +71,7 @@ function initiateChart() {
   const processedData = processData(initialData);
   const series = createSeries(chart, processedData);
 
-  setInterval(() => getNewData(series), 3000);
+  refreshIntervalId = setInterval(() => getNewData(series), 3000);
 }
 
 function attachListenersToChartOptions() {
@@ -93,6 +94,7 @@ async function refreshChartContainer(chartType) {
     });
     const html = await response.text();
     document.getElementById("chart-container").innerHTML = html;
+    clearInterval(refreshIntervalId);
     evalConfig(html);
     attachListenersToChartOptions();
     initiateChart();
