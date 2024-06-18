@@ -70,10 +70,10 @@ Serwer został zaimplementowany zgodnie z następującym diagramem:
 Wykorzystałem sensory korzystające zarówno z komunikacji I2C (BMP280) jak i
 Serial (DHT11). Było to na pewno edukacyjne doświadczenie, jednak w przyszłości
 prawdopodobnie postawię na czujniki komunikujące się przez I2C, z powodu
-łatwiejszego wykorzystania po stronie oprogramowania i dodatkowych podzespołów
-(do podłączenia DHT11 musiałem skorzystać z dodatkowego rezystora). Kolejnym
-problemem z DHT11 była niska dokładność czujnika, która nie pozwalała na
-odczytywanie zmian w wynikach odczytu w czasie rzeczywistym (przy małych
+łatwiejszego wykorzystania po stronie oprogramowania i nie wymagania dodatkowych
+podzespołów (do podłączenia DHT11 musiałem skorzystać z dodatkowego rezystora).
+Kolejnym problemem z DHT11 była niska dokładność czujnika, która nie pozwalała
+na odczytywanie zmian w wynikach odczytu w czasie rzeczywistym (przy małych
 zmianach). Jedynym problemem z BMP280 był brak fabrycznie wlutowanych pinów.
 
 ### SSR a CSR
