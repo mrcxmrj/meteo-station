@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source .venv/bin/activate
-alias repl="sudo mpremote connect port:/dev/ttyACM0"
+alias repl="mpremote connect port:/dev/ttyACM0"
 
 if [[ -e src/config.py ]]; then
     echo "Existing Wi-Fi config detected"

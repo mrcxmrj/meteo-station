@@ -3,6 +3,28 @@
 Full-stack web application for Raspberry Pi Pico WH, displaying data gathered
 from connected sensors in the form of an interactive dashboard.
 
+## Running the project
+
+First make sure the Pi Pico is connected to the approprate port (my setup script
+assumes it is `/dev/ttyACM0`):
+
+```bash
+ls /dev | grep ttyACM
+```
+
+Then run the setup script to setup the virtual environment, Wi-Fi config and
+some useful aliases:
+
+```bash
+source setup.sh
+```
+
+Finally, use the `run` alias to run the project:
+
+```bash
+run src/main.py
+```
+
 ## Technologies used
 
 I used the hottest tech stack in the web-apps-for-microcontrollers world:
