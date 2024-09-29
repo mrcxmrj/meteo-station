@@ -4,6 +4,7 @@ from client.components.chart_container import ChartContainer
 from client.components.options import Options
 from client.components.table import Table
 from client.components.table_container import TableContainer
+from client.components.thermometers import Thermometers
 from reader import Reader
 
 
@@ -18,7 +19,9 @@ class UIManager:
         self.pressure_units = "hPa"
 
     def get_app_template(self, page: str, subpage: str = ""):
-        if page == "tables":
+        if page == "thermometers":
+            page_template = self.get_thermometers_template()
+        elif page == "tables":
             page_template = self.get_table_container_template()
         elif page == "options":
             page_template = self.get_options_template()
@@ -27,6 +30,12 @@ class UIManager:
         else:
             page_template = ""
         return App(page_template).render()
+
+    def get_thermometers_template(self):
+        records = self.reader.read_saved_measurements_by_category(
+            category="temperature", top=5
+        )
+        return Thermometers(records, "°C").render()
 
     def get_table_template(self, table_type: str):
         records = self.reader.read_saved_measurements_by_category(

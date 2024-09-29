@@ -20,6 +20,10 @@ class Router:
         if route[0] == "" and method == "GET":
             return self.handle_get(self.ui_manager.get_app_template(page="index"))
 
+        if route[0] == "thermometers" and method == "GET":
+            template = self.ui_manager.get_app_template(page="thermometers")
+            return self.handle_get(template)
+
         if route[0] == "tables" and method == "GET":
             template = (
                 self.ui_manager.get_table_container_template()
